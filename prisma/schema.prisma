@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Block {
+  id                 Int      @id @default(autoincrement())
+  title             String
+  slug              String   @unique
+  summaryDescription String   @db.Text
+  fullDescription   String?  @db.Text
+  iconPath          String?
+  status            Status   @default(PENDING)
+  isArchived        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+enum Status {
+  PENDING
+  IN_DEVELOPMENT
+  PUBLISHED
+} 

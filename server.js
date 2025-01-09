@@ -1,25 +1,34 @@
 const express = require('express');
-const app = express();
 const path = require('path');
+require('dotenv').config();
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+const app = express();
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use('/css', express.static(path.join(__dirname, 'public/css')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.get('/', (req, res) => {
-    res.render('index');
-});
-
-app.get('/privacy', (req, res) => {
-    res.render('privacy');
-});
-
-app.get('/about', (req, res) => {
-    res.render('about');
-});
+// Routes will be imported here
+const routes = require('./src/routes');
+app.use('/', routes);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    try {
+        await prisma.$connect();
+        console.log('Database connected successfully');
+    } catch (error) {
+        console.error('Database connection failed:', error);
+        process.exit(1);
+    }
     console.log(`Server is running on port ${PORT}`);
-}); 
+});
+
+// Handle cleanup on app termination
+process.on('SIGINT', async () => {
+    await prisma.$disconnect();
+    process.exit(0);
+});
