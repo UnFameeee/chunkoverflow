@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chunkoverflow - Your Ultimate Solutions Platform</title>
+    <link href="/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+</head>
+<body class="bg-gray-50">
+    <%- include('partials/header') %>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 bg-gradient-to-br from-white via-[#f0f9f5] to-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center max-w-4xl mx-auto" data-aos="fade-up">
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-800 mb-6 leading-tight">
+                    Discover Our <span class="bg-gradient-to-r from-[#72d1a8] to-[#4fa883] text-transparent bg-clip-text">Powerful Tools</span>
+                </h1>
+                <p class="text-xl text-gray-600 mb-12 leading-relaxed">
+                    Everything you need in one place. Simple, efficient, and powerful tools to enhance your productivity.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button class="bg-[#72d1a8] text-white px-8 py-3 rounded-lg hover:bg-[#5bb892] transition-all transform hover:-translate-y-1 font-medium">
+                        Get Started
+                    </button>
+                    <button class="bg-white text-gray-800 px-8 py-3 rounded-lg hover:bg-gray-100 transition-all transform hover:-translate-y-1 font-medium border border-gray-200">
+                        Learn More
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Grid -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800" data-aos="fade-up">Our Featured Tools</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-[1fr]">
+                <!-- Tool Card 1 -->
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <a href="/tool1" class="group block h-full">
+                        <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-2 border border-gray-100 h-full flex flex-col justify-between">
+                            <div class="w-16 h-16 bg-gradient-to-br from-[#72d1a8] to-[#4fa883] rounded-lg flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-3 text-gray-800">PDF Tools</h3>
+                                <p class="text-gray-600 leading-relaxed">Powerful PDF manipulation tools for all your document needs.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Tool Card 2 -->
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <a href="/tool2" class="group block h-full">
+                        <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-2 border border-gray-100 h-full flex flex-col justify-between">
+                            <div class="w-16 h-16 bg-gradient-to-br from-[#72d1a8] to-[#4fa883] rounded-lg flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-3 text-gray-800">Image Editor</h3>
+                                <p class="text-gray-600 leading-relaxed">Professional image editing tools at your fingertips.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Tool Card 3 -->
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <a href="/tool3" class="group block h-full">
+                        <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-2 border border-gray-100 h-full flex flex-col justify-between">
+                            <div class="w-16 h-16 bg-gradient-to-br from-[#72d1a8] to-[#4fa883] rounded-lg flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-3 text-gray-800">Code Formatter</h3>
+                                <p class="text-gray-600 leading-relaxed">Format and beautify your code with ease.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Why Choose Chunkoverflow?</h2>
+                <p class="text-gray-600">Experience the best collection of tools designed to make your work easier and more efficient.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-[#72d1a8] mb-4">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Fast & Efficient</h3>
+                    <p class="text-gray-600">Lightning-fast processing for all your tools.</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-[#72d1a8] mb-4">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Secure</h3>
+                    <p class="text-gray-600">Your data is always safe with us.</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg" data-aos="fade-up" data-aos-delay="300">
+                    <div class="text-[#72d1a8] mb-4">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Customizable</h3>
+                    <p class="text-gray-600">Adjust settings to match your needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+    </script>
+</body>
+</html> 

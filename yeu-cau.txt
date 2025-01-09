@@ -1,0 +1,64 @@
+Danh sách yêu cầu cho website Chunkoverflow
+Yêu cầu chung
+Công nghệ sử dụng:
+
+Backend: NodeJS, ExpressJS.
+Frontend: EJS (Embedded JavaScript Templates), TailwindCSS.
+Cơ sở dữ liệu: MySQL.
+Màu chủ đạo: #72d1a8.
+UI/UX:
+
+Thiết kế hiện đại, đẹp mắt, thân thiện với người dùng.
+Giao diện responsive, hiển thị tốt trên mọi thiết bị (máy tính, tablet, điện thoại).
+Tên website:
+
+Tên: Chunkoverflow.
+Tính năng chính
+1. Trang chủ:
+Hiển thị danh sách các blocks với phần tóm tắt mô tả (summary description) cho từng block.
+Mỗi block gồm:
+Tiêu đề.
+Mô tả tóm tắt (khác với mô tả chi tiết).
+Hình ảnh icon (do admin tải lên).
+Trạng thái (Pending, In Development, Published).
+2. Trang chi tiết block:
+Khi nhấn vào một block, chuyển đến trang chi tiết, hiển thị:
+Mô tả đầy đủ.
+Hình ảnh icon.
+Trạng thái.
+Các thông tin bổ sung (ví dụ: danh mục, tags).
+3. Đăng nhập Admin:
+Admin có thể đăng nhập để quản lý nội dung.
+Người dùng ẩn danh chỉ có thể xem danh sách blocks và chi tiết của chúng.
+4. Quản lý Blocks (CRUD):
+Admin có thể:
+
+Tạo mới block.
+Chỉnh sửa block hiện có.
+Xóa block.
+Lưu trữ (archive - xóa mềm) block.
+Thay đổi trạng thái của block (Pending, In Development, Published).
+5. Tải lên hình ảnh:
+Admin có thể tải lên hình ảnh icon cho mỗi block.
+Tính năng bổ sung
+1. Tìm kiếm và Lọc Blocks:
+Người dùng có thể:
+Tìm kiếm blocks theo từ khóa.
+Lọc blocks theo:
+Trạng thái (Pending, In Development, Published).
+Danh mục hoặc tags.
+2. Phân loại Blocks (Categories/Tags):
+Admin có thể gắn một hoặc nhiều danh mục (categories) hoặc thẻ (tags) cho mỗi block.
+Người dùng có thể duyệt blocks theo danh mục hoặc thẻ.
+3. Tích hợp SEO cơ bản:
+Áp dụng các phương pháp SEO:
+
+Tự động tạo meta tags (title, description) cho từng trang và block.
+URL thân thiện với SEO (ví dụ: /block/tieu-de-block).
+Tạo sitemap hỗ trợ công cụ tìm kiếm lập chỉ mục.
+Tối ưu hóa hình ảnh (thêm alt tags, nén ảnh).
+4. Responsive Design:
+Đảm bảo giao diện hiển thị tốt trên:
+Máy tính.
+Tablet.
+Điện thoại.
