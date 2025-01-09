@@ -1,0 +1,23 @@
+{
+  "name": "tools-landing-page",
+  "version": "1.0.0",
+  "description": "Modern landing page for tools collection",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "concurrently \"nodemon server.js\" \"npm run watch:css\"",
+    "watch:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css --watch",
+    "build:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "nodemon": "^3.1.9",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "concurrently": "^8.2.2"
+  }
+}
