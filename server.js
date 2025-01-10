@@ -1,25 +1,54 @@
+require('dotenv').config();
 const express = require('express');
-const app = express();
 const path = require('path');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const methodOverride = require('method-override');
+const errorHandler = require('./src/middleware/errorHandler');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+const app = express();
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use('/css', express.static(path.join(__dirname, 'public/css')));
+app.use('/js', express.static(path.join(__dirname, 'public/js')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// Session middleware
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production' }
+}));
+
+// Method override for PUT/DELETE requests
+app.use(require('method-override')('_method'));
 
 // Routes
-app.get('/', (req, res) => {
-    res.render('index');
-});
+const routes = require('./src/routes');
+app.use('/', routes);
 
-app.get('/privacy', (req, res) => {
-    res.render('privacy');
-});
-
-app.get('/about', (req, res) => {
-    res.render('about');
-});
+// Error handler middleware (should be last)
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    try {
+        await prisma.$connect();
+        console.log('Database connected successfully');
+    } catch (error) {
+        console.error('Database connection failed:', error);
+        process.exit(1);
+    }
     console.log(`Server is running on port ${PORT}`);
-}); 
+});
+
+// Handle cleanup on app termination
+process.on('SIGINT', async () => {
+    await prisma.$disconnect();
+    process.exit(0);
+});
