@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= block.title %> - Chunkoverflow</title>
+    <link href="/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+</head>
+<body class="bg-gray-50">
+    <%- include('../partials/header') %>
+
+    <!-- Back Button - Fixed Position -->
+    <div class="fixed top-24 left-6 z-10">
+        <a href="/" class="inline-flex items-center px-4 py-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-all text-gray-700 hover:text-gray-900">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Home
+        </a>
+    </div>
+
+    <!-- Tool Detail Section -->
+    <section class="pt-32 pb-20">
+        <div class="container mx-auto px-6 max-w-5xl">
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <!-- Tool Header -->
+                <div class="p-8 border-b border-gray-100">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center">
+                            <% if (block.iconPath) { %>
+                                <img src="<%= block.iconPath %>" alt="<%= block.title %>" 
+                                    class="w-20 h-20 object-contain mr-6">
+                            <% } %>
+                            <div>
+                                <h1 class="text-3xl font-bold text-gray-800 mb-2"><%= block.title %></h1>
+                                <div class="flex items-center">
+                                    <span class="px-3 py-1 text-sm font-semibold rounded-full
+                                        <%= block.status === 'PUBLISHED' ? 'bg-green-100 text-green-800' :
+                                            block.status === 'IN_DEVELOPMENT' ? 'bg-yellow-100 text-yellow-800' :
+                                            'bg-gray-100 text-gray-800' %>">
+                                        <%= block.status %>
+                                    </span>
+                                    <% if (block.url) { %>
+                                        <a href="<%= block.url %>" 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            class="ml-4 inline-flex items-center text-[#72d1a8] hover:text-[#5bb892] font-medium">
+                                            <span>Visit Tool</span>
+                                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                            </svg>
+                                        </a>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            Added <%= new Date(block.createdAt).toLocaleDateString() %>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tool Content -->
+                <div class="p-8">
+                    <!-- Summary -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Summary</h2>
+                        <p class="text-gray-600 leading-relaxed"><%= block.summaryDescription %></p>
+                    </div>
+
+                    <!-- Full Description -->
+                    <% if (block.fullDescription) { %>
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-800 mb-4">Description</h2>
+                            <div class="prose max-w-none text-gray-600">
+                                <%= block.fullDescription %>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('../partials/footer') %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+    </script>
+</body>
+</html> 
