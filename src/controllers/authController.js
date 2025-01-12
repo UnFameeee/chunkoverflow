@@ -5,14 +5,11 @@ const prisma = new PrismaClient();
 
 const login = async (req, res) => {
     try {
-        console.log('Login attempt:', req.body); // Debug log
         const { username, password } = req.body;
         
         const user = await prisma.user.findUnique({
             where: { username }
         });
-
-        console.log('Found user:', user); // Debug log
 
         if (!user || !await bcrypt.compare(password, user.password)) {
             return res.status(401).json({ 

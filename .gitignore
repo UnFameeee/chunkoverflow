@@ -130,3 +130,5 @@ dist
 .pnp.*
 
 public/css/output.css
+public/uploads
+*.rar

@@ -5,11 +5,8 @@ const path = require('path');
 const slugify = require('slugify');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const { blockController, authController } = require('../controllers');
+const { authController } = require('../controllers');
 const { isAuthenticated } = require('../middleware/auth');
-const { marked } = require('marked');
-const TextFormatter = require('../utils/textFormatter');
-
 // Configure multer for file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -66,15 +63,18 @@ router.get('/blocks', async (req, res) => {
 router.post('/blocks', upload.single('icon'), async (req, res) => {
     try {
         const { title, summaryDescription, fullDescription, status, url } = req.body;
-        const htmlDescription = TextFormatter.formatDescription(fullDescription);
-        const htmlSummary = marked(summaryDescription);
+        
+        // Validate required fields
+        if (!title || !summaryDescription || !fullDescription) {
+            throw new Error('Missing required fields');
+        }
         
         const block = await prisma.block.create({
             data: {
                 title,
                 slug: slugify(title, { lower: true }),
-                summaryDescription: htmlSummary,
-                fullDescription: htmlDescription,
+                summaryDescription,
+                fullDescription,
                 status: status || 'PUBLISHED',
                 url,
                 iconPath: req.file ? `/uploads/${req.file.filename}` : null
@@ -82,7 +82,26 @@ router.post('/blocks', upload.single('icon'), async (req, res) => {
         });
         res.redirect('/admin/blocks');
     } catch (error) {
-        res.status(500).render('error', { message: 'Error creating tool' });
+        console.error('Error creating block:', error);
+        
+        let errorMessage = 'Error creating tool';
+        if (error.message === 'Missing required fields') {
+            errorMessage = 'Please fill in all required fields';
+        } else if (error.code === 'P2002') {
+            errorMessage = 'A tool with this title already exists';
+        }
+        
+        // Render the admin page with error message
+        const blocks = await prisma.block.findMany({
+            orderBy: { createdAt: 'desc' }
+        });
+        
+        res.render('admin/blocks/index', { 
+            blocks, 
+            title: 'Manage Projects',
+            message: errorMessage,
+            messageType: 'error'
+        });
     }
 });
 
@@ -90,14 +109,12 @@ router.put('/blocks/:id', upload.single('icon'), async (req, res) => {
     try {
         const { id } = req.params;
         const { title, summaryDescription, fullDescription, status, url } = req.body;
-        const htmlDescription = TextFormatter.formatDescription(fullDescription);
-        const htmlSummary = marked(summaryDescription);
         
         const updateData = {
             title,
             slug: slugify(title, { lower: true }),
-            summaryDescription: htmlSummary,
-            fullDescription: htmlDescription,
+            summaryDescription,
+            fullDescription,
             status,
             url,
         };

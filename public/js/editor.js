@@ -5,7 +5,10 @@ window.EditorManager = window.EditorManager || {
     initEditor: function(elementId) {
         return ClassicEditor
             .create(document.querySelector(elementId), {
-                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'code'],
+                toolbar: {
+                    items: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+                    shouldNotGroupWhenFull: true
+                },
                 heading: {
                     options: [
                         { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -28,20 +31,10 @@ window.EditorManager = window.EditorManager || {
         return ClassicEditor
             .create(document.querySelector(elementId), {
                 toolbar: {
-                    items: ['bold', 'italic', '|', 'bulletedList'],
+                    items: ['bold', 'italic', 'link', 'bulletedList'],
                     shouldNotGroupWhenFull: true
                 },
-                removePlugins: ['Heading', 'BlockQuote', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed', 'Table'],
-                link: {
-                    defaultProtocol: 'https://',
-                    decorators: {
-                        openInNewTab: {
-                            mode: 'manual',
-                            label: 'Open in new tab',
-                            defaultValue: true
-                        }
-                    }
-                }
+                removePlugins: ['Heading', 'BlockQuote', 'Table', 'MediaEmbed']
             })
             .then(editor => {
                 this.editors[elementId] = editor;
@@ -53,11 +46,16 @@ window.EditorManager = window.EditorManager || {
     },
     
     destroyEditor: function(elementId) {
-        if (this.editors[elementId]) {
-            this.editors[elementId].destroy()
-                .then(() => {
-                    delete this.editors[elementId];
-                });
-        }
+        return new Promise((resolve) => {
+            if (this.editors[elementId]) {
+                this.editors[elementId].destroy()
+                    .then(() => {
+                        delete this.editors[elementId];
+                        resolve();
+                    });
+            } else {
+                resolve();
+            }
+        });
     }
 }; 
