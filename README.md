@@ -1,132 +1,42 @@
 # Chunkoverflow
 
-A modern web application for managing and showcasing various projects and solutions. Built with Node.js, Express, and Prisma.
+A modern tools platform with React TypeScript frontend and Express.js backend.
 
-## Features
+## Architecture
 
-- 🚀 Modern and responsive UI using TailwindCSS
-- 🔐 Secure admin panel for content management
-- 📱 Mobile-friendly design
-- 🖼️ Image upload support for block icons
-- 🔍 SEO-friendly URLs
-- 🎨 Beautiful UI with primary color #72d1a8
+This project has been restructured into a modern full-stack application:
 
-### Core Functionalities
-
-- **Public Access**
-  - View list of tools/blocks
-  - Read detailed descriptions
-  - Filter by status
-  - Responsive design for all devices
-
-- **Admin Panel**
-  - Secure authentication
-  - CRUD operations for blocks
-  - Image upload management
-  - Status management (Pending, In Development, Published)
-  - Soft delete (archive) functionality
-
-## Tech Stack
-
-- **Backend**
-  - Node.js
-  - Express.js
-  - Prisma (ORM)
-  - MySQL
-
-- **Frontend**
-  - EJS (Embedded JavaScript Templates)
-  - TailwindCSS
-  - AOS (Animate On Scroll)
-
-- **Tools & Utilities**
-  - Multer (File uploads)
-  - Slugify (URL-friendly slugs)
-  - Express Session
-  - Method Override
-
-## Getting Started
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/chunkoverflow.git
-   cd chunkoverflow
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   Create a `.env` file in the root directory:
-   ```env
-   DATABASE_URL="mysql://user:password@localhost:3306/dbname"
-   PORT=3000
-   SESSION_SECRET="your-secret-key"
-   ADMIN_USERNAME="admin"
-   ADMIN_PASSWORD="your-secure-password"
-   ```
-
-4. **Set up the database**
-   ```bash
-   npx prisma migrate dev
-   ```
-
-5. **Build CSS**
-   ```bash
-   npm run build:css
-   ```
-
-6. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-The application will be available at `http://localhost:3000`
-
-## Development
-
-- **Watch CSS changes**
-  ```bash
-  npm run watch:css
-  ```
-
-- **Build CSS for production**
-  ```bash
-  npm run build:css
-  ```
+- **Frontend**: React TypeScript with Vite, Tailwind CSS
+- **Backend**: Express.js API server with Prisma ORM
+- **Database**: Prisma ORM (supports PostgreSQL, MySQL, SQLite)
 
 ## Project Structure
-chunkoverflow/
-├── prisma/
-│   └── schema.prisma
-├── public/
-│   ├── css/
-│   ├── js/
-│   └── uploads/
-├── src/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── routes/
-│   └── lib/
-├── views/
-│   ├── admin/
-│   ├── block/
-│   └── partials/
-└── server.js
 
-### Directory Structure Description
+```
+├── Frontend/              # React TypeScript frontend
+│   ├── src/
+│   │   ├── components/    # React components
+│   │   ├── pages/         # Page components
+│   │   ├── hooks/         # Custom React hooks
+│   │   ├── types/         # TypeScript type definitions
+│   │   └── utils/         # Utility functions
+│   ├── public/            # Static assets
+│   └── package.json       # Frontend dependencies
+├── Backend/               # Express.js API server
+│   ├── src/
+│   │   ├── controllers/   # Route controllers
+│   │   ├── middleware/    # Custom middleware
+│   │   ├── models/        # Data models
+│   │   ├── routes/        # Express routes
+│   │   └── utils/         # Utility functions
+│   ├── views/             # EJS templates (for admin)
+│   ├── prisma/            # Database schema and migrations
+│   ├── scripts/           # Utility scripts
+│   └── package.json       # Backend dependencies
+└── package.json           # Root package.json for scripts
+```
 
-- `prisma/`: Contains Prisma configuration files and database schema
-- `public/`: Static files directory
-  - `css/`: CSS files
-  - `js/`: JavaScript files
-  - `uploads/`: Uploaded images
-- `src/`: Main source code
-  - `controllers/`: Application logic
-  - `middleware/`: Custom middleware functions
-  - `routes/`: Route definitions
+## Installation
   - `lib/`: Helper libraries
 - `views/`: EJS template files
   - `admin/`: Admin panel views
