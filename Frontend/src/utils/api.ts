@@ -24,6 +24,14 @@ export const blocksApi = {
     }
     throw new Error(response.data.message || 'Failed to fetch block');
   },
+
+  create: async (blockData: Omit<Block, 'id' | 'createdAt' | 'updatedAt' | 'slug'>): Promise<Block> => {
+    const response = await api.post<ApiResponse<Block>>('/api/admin/blocks', blockData);
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.message || 'Failed to create block');
+  },
 };
 
 export default api;

@@ -88,12 +88,12 @@ const BlockDetail = () => {
 
             <div className="prose prose-lg max-w-none">
               <div className="text-xl text-gray-600 mb-8">
-                {block.description}
+                {block.summaryDescription}
               </div>
               
               <div 
                 className="text-gray-700 leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: block.content }}
+                dangerouslySetInnerHTML={{ __html: block.fullDescription }}
               />
             </div>
           </div>
