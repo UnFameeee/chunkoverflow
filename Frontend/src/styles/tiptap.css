@@ -1,0 +1,149 @@
+/* Tiptap Editor Styles */
+.ProseMirror {
+  outline: none;
+  min-height: 200px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Headings */
+.ProseMirror h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 1rem 0 0.5rem 0;
+  color: #333;
+  padding-bottom: 0.25rem;
+  display: block;
+}
+
+.ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0.75rem 0 0.5rem 0;
+  color: #333;
+  display: block;
+}
+
+.ProseMirror h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0.75rem 0 0.5rem 0;
+  color: #333;
+  display: block;
+}
+
+/* Lists */
+.ProseMirror ul {
+  list-style-type: disc !important;
+  padding-left: 2.5rem !important;
+  margin: 0.75rem 0 !important;
+}
+
+.ProseMirror ol {
+  list-style-type: decimal !important;
+  padding-left: 2.5rem !important;
+  margin: 0.75rem 0 !important;
+}
+
+.ProseMirror li {
+  margin: 0.5rem 0 !important;
+  display: list-item !important;
+  text-align: start !important;
+}
+
+.ProseMirror li p {
+  margin: 0;
+  display: inline-block;
+  vertical-align: top;
+  white-space: normal;
+}
+
+/* Ensure list styling is visible */
+.ProseMirror ul > li::marker,
+.ProseMirror ol > li::marker {
+  color: #666;
+  font-weight: bold;
+  vertical-align: top;
+  display: inline-block;
+}
+
+/* Text alignment */
+.ProseMirror .text-left,
+.ProseMirror p[style*="text-align: left"] {
+  text-align: left !important;
+}
+
+.ProseMirror .text-center,
+.ProseMirror p[style*="text-align: center"] {
+  text-align: center !important;
+}
+
+.ProseMirror .text-right,
+.ProseMirror p[style*="text-align: right"] {
+  text-align: right !important;
+}
+
+/* Links */
+.ProseMirror a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+
+/* Paragraphs */
+.ProseMirror p {
+  margin: 0.5rem 0;
+}
+
+
+/* Better list styling */
+.ProseMirror ul[data-type="bulletList"] {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  display: block;
+}
+
+.ProseMirror ol[data-type="orderedList"] {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  display: block;
+}
+
+.ProseMirror ul[data-type="bulletList"] li,
+.ProseMirror ol[data-type="orderedList"] li {
+  display: list-item;
+  margin-left: 0.5rem;
+}
+
+/* Primary color utilities for toolbar buttons */
+.focus\:ring-primary-500:focus {
+  --tw-ring-color: hsl(var(--primary));
+  --tw-ring-opacity: 0.5;
+}
+
+.bg-primary-200 {
+  background-color: hsl(var(--primary) / 0.2);
+}
+
+.text-primary-800 {
+  color: hsl(var(--primary) / 0.8);
+}
+
+.hover\:bg-primary-200:hover {
+  background-color: hsl(var(--primary) / 0.2);
+}
+
+/* Text alignment classes */
+.ProseMirror [style*="text-align: left"] {
+  text-align: left !important;
+}
+
+.ProseMirror [style*="text-align: center"] {
+  text-align: center !important;
+}
+
+.ProseMirror [style*="text-align: right"] {
+  text-align: right !important;
+}
