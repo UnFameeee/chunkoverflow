@@ -32,17 +32,18 @@ export const blockService = {
     return response.data;
   },
 
-  createBlock: async (formData: FormData) => {
-    const response = await api.post<ApiResponse<Block>>('/blocks', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+  getBlockById: async (id: number) => {
+    const response = await api.get<ApiResponse<Block>>(`/blocks/admin/${id}`);
     return response.data;
   },
 
-  updateBlock: async (id: number, formData: FormData) => {
-    const response = await api.put<ApiResponse<Block>>(`/blocks/${id}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+  createBlock: async (data: any) => {
+    const response = await api.post<ApiResponse<Block>>('/blocks', data);
+    return response.data;
+  },
+
+  updateBlock: async (id: number, data: any) => {
+    const response = await api.put<ApiResponse<Block>>(`/blocks/${id}`, data);
     return response.data;
   },
 

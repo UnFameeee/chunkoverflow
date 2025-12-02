@@ -34,9 +34,8 @@ export const getAllBlocks = async (req: Request, res: Response) => {
     // Add status filter
     if (status && status !== 'ALL') {
       where.status = status;
-    } else {
-      where.status = 'PUBLISHED';
     }
+    // If status is 'ALL' or not provided, don't filter by status
 
     // Add search filter
     if (search && search.trim()) {
@@ -88,6 +87,36 @@ export const getBlockBySlug = async (req: Request, res: Response) => {
       where: {
         slug,
         isArchived: false
+      }
+    });
+
+    if (!block) {
+      return res.status(404).json({
+        success: false,
+        message: 'Block not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: block
+    });
+  } catch (error) {
+    console.error('Error fetching block:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching block details'
+    });
+  }
+};
+
+export const getBlockById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const block = await prisma.block.findUnique({
+      where: {
+        id: Number(id)
       }
     });
 

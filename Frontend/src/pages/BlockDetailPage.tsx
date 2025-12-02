@@ -7,8 +7,8 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, ExternalLink, Package, Calendar, Clock } from 'lucide-react';
-import { marked } from 'marked';
 import { formatDistanceToNow } from 'date-fns';
+import RichTextViewer from '@/components/RichTextViewer';
 
 const statusColors = {
   PENDING: 'bg-yellow-100 text-yellow-800 border-yellow-200',
@@ -123,9 +123,10 @@ export default function BlockDetailPage() {
                         {statusLabels[block.status]}
                       </Badge>
                     </div>
-                    <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-                      {block.summaryDescription}
-                    </p>
+                    <RichTextViewer 
+                      content={block.summaryDescription}
+                      className="text-base md:text-lg text-muted-foreground leading-relaxed"
+                    />
                     
                     {/* Mobile Only Visit Button */}
                     {block.url && (
@@ -146,9 +147,7 @@ export default function BlockDetailPage() {
                   </div>
                 </div>
 
-                <div className="prose prose-slate max-w-none prose-headings:font-bold prose-a:text-primary hover:prose-a:text-primary/80 prose-img:rounded-xl prose-pre:overflow-x-auto prose-pre:bg-slate-900 prose-pre:text-slate-50">
-                  <div dangerouslySetInnerHTML={{ __html: marked(block.fullDescription || '') }} />
-                </div>
+                <RichTextViewer content={block.fullDescription || ''} />
               </div>
             </div>
 

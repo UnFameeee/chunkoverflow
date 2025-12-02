@@ -12,17 +12,27 @@ export default function HomePage() {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   useEffect(() => {
     fetchBlocks();
-  }, [search]);
+  }, [debouncedSearch]);
 
   const fetchBlocks = async () => {
     try {
       setLoading(true);
       const response = await blockService.getAllBlocks({
-        status: 'PUBLISHED',
-        search: search || undefined,
+        status: 'ALL', // Show all statuses to notify users about development progress
+        search: debouncedSearch || undefined,
         page: 1,
         pageSize: 100 // Load all for homepage
       });

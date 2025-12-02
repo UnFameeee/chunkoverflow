@@ -39,6 +39,7 @@ router.get('/:slug', blockController.getBlockBySlug);
 
 // Admin routes (protected)
 router.post('/admin/list', authenticate, blockController.getAdminBlocks); // POST for pagination
+router.get('/admin/:id', authenticate, blockController.getBlockById);
 router.post('/', authenticate, upload.single('icon'), blockController.createBlock);
 router.put('/:id', authenticate, upload.single('icon'), blockController.updateBlock);
 router.patch('/:id/archive', authenticate, blockController.archiveBlock);

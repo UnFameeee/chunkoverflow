@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import BlockDetailPage from './pages/BlockDetailPage';
 import LoginPage from './pages/admin/LoginPage';
 import AdminBlocksPage from './pages/admin/AdminBlocksPage';
+import BlockFormPage from './pages/admin/BlockFormPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -20,6 +21,22 @@ function App() {
           element={
             <ProtectedRoute>
               <AdminBlocksPage />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin/blocks/create" 
+          element={
+            <ProtectedRoute>
+              <BlockFormPage />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin/blocks/:id/edit" 
+          element={
+            <ProtectedRoute>
+              <BlockFormPage />
             </ProtectedRoute>
           } 
         />

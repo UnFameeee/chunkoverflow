@@ -1,10 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Block } from '@/types';
 import { Link } from 'react-router-dom';
 import { Package, ArrowRight, Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
+import RichTextViewer from './RichTextViewer';
 
 interface BlockCardProps {
   block: Block;
@@ -60,9 +61,12 @@ export default function BlockCard({ block }: BlockCardProps) {
       </CardHeader>
       
       <CardContent className="flex-1 pb-4">
-        <CardDescription className="line-clamp-3 text-sm leading-relaxed">
-          {block.summaryDescription}
-        </CardDescription>
+        <div className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+          <RichTextViewer 
+            content={block.summaryDescription}
+            className="prose-sm prose-p:text-muted-foreground prose-p:my-0"
+          />
+        </div>
       </CardContent>
 
       <CardFooter className="pt-0">
