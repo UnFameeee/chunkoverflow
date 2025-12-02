@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Loader2, Globe, Image as ImageIcon, Layout, FileText, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, Globe, Image as ImageIcon, Layout, FileText, AlertCircle, Sparkles, Link as LinkIcon } from 'lucide-react';
 import Header from '@/components/Header';
 import RichTextEditor from '@/components/RichTextEditor';
 import { Badge } from '@/components/ui/badge';
@@ -103,12 +103,16 @@ export default function BlockFormPage() {
 
   if (fetching) {
     return (
-      <div className="min-h-screen flex flex-col bg-slate-50">
+      <div className="min-h-screen flex flex-col bg-slate-50/50 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/5 to-transparent -z-10" />
         <Header />
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
-            <p className="text-muted-foreground">Loading block details...</p>
+          <div className="text-center relative">
+            <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
+            <div className="relative bg-white p-4 rounded-full shadow-lg mb-4 inline-block">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+            <p className="text-muted-foreground font-medium animate-pulse">Loading block details...</p>
           </div>
         </div>
       </div>
@@ -116,30 +120,38 @@ export default function BlockFormPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50/50">
+    <div className="min-h-screen flex flex-col bg-slate-50/50 relative overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/5 to-transparent -z-10" />
+      <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-blue-400/10 rounded-full blur-3xl -z-10" />
+      <div className="absolute top-[20%] left-[-5%] w-72 h-72 bg-purple-400/10 rounded-full blur-3xl -z-10" />
+
       <Header />
       
       <main className="flex-1 container mx-auto px-4 py-8">
-        <form onSubmit={handleSubmit} className="max-w-6xl mx-auto">
+        <form onSubmit={handleSubmit} className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
           {/* Header Actions */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-4">
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/admin/blocks')}
-                className="text-muted-foreground hover:text-foreground"
+                className="text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-full h-10 w-10 p-0 flex items-center justify-center transition-all hover:scale-105"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
+                <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-slate-900">
+                <h1 className="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
                   {isEdit ? 'Edit Block' : 'Create New Block'}
+                  <span className="text-sm font-normal text-muted-foreground bg-white/50 px-3 py-1 rounded-full border border-slate-200/50 hidden md:inline-flex items-center gap-1">
+                    {isEdit ? <EditIcon className="w-3 h-3" /> : <Sparkles className="w-3 h-3 text-yellow-500" />}
+                    {isEdit ? 'Updating Content' : 'New Entry'}
+                  </span>
                 </h1>
-                <p className="text-sm text-muted-foreground">
-                  {isEdit ? 'Update existing content block' : 'Add a new tool to the collection'}
+                <p className="text-muted-foreground mt-1">
+                  {isEdit ? 'Update existing content block details and settings' : 'Add a new tool or resource to the collection'}
                 </p>
               </div>
             </div>
@@ -149,13 +161,14 @@ export default function BlockFormPage() {
                 variant="outline"
                 onClick={() => navigate('/admin/blocks')}
                 disabled={loading}
+                className="rounded-full px-6 border-slate-200 hover:bg-slate-50 hover:text-slate-900"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={loading}
-                className="min-w-[120px]"
+                className="min-w-[140px] rounded-full px-6 bg-gradient-to-r from-primary to-primary-600 hover:from-primary-600 hover:to-primary-700 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300"
               >
                 {loading ? (
                   <>
@@ -173,25 +186,32 @@ export default function BlockFormPage() {
           </div>
 
           {error && (
-            <div className="mb-6 p-4 rounded-lg bg-destructive/10 text-destructive flex items-center gap-2 border border-destructive/20">
-              <AlertCircle className="w-5 h-5 shrink-0" />
-              {error}
+            <div className="mb-8 p-4 rounded-2xl bg-red-50/50 text-red-600 flex items-center gap-3 border border-red-100 shadow-sm animate-in slide-in-from-top-2">
+              <div className="p-2 bg-red-100 rounded-full">
+                <AlertCircle className="w-5 h-5 shrink-0" />
+              </div>
+              <p className="font-medium">{error}</p>
             </div>
           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content Column */}
-            <div className="lg:col-span-2 space-y-6">
-              <Card className="border-none shadow-md">
-                <CardHeader className="border-b bg-white/50">
-                  <div className="flex items-center gap-2">
-                    <Layout className="w-5 h-5 text-primary" />
-                    <CardTitle>Basic Information</CardTitle>
+            <div className="lg:col-span-2 space-y-8">
+              <Card className="border-0 shadow-xl shadow-slate-200/40 bg-white/80 backdrop-blur-md overflow-hidden rounded-2xl ring-1 ring-slate-200/60">
+                <CardHeader className="border-b border-slate-100 bg-white/50 px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Layout className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg font-semibold text-slate-900">Basic Information</CardTitle>
+                      <p className="text-xs text-muted-foreground mt-0.5">Core details about the block</p>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Block Title *</Label>
+                  <div className="space-y-2 group">
+                    <Label htmlFor="title" className="text-slate-700 font-medium group-focus-within:text-primary transition-colors">Block Title <span className="text-red-500">*</span></Label>
                     <Input
                       id="title"
                       name="title"
@@ -200,17 +220,17 @@ export default function BlockFormPage() {
                       required
                       disabled={loading}
                       placeholder="e.g. React Query"
-                      className="text-lg font-medium"
+                      className="text-lg font-medium h-12 rounded-xl border-slate-200 focus-visible:ring-primary/20 focus-visible:border-primary transition-all shadow-sm"
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="slug">URL Slug *</Label>
-                    <div className="flex items-center">
-                      <span className="bg-slate-100 border border-r-0 rounded-l-md px-3 py-2 text-sm text-muted-foreground">
+                  <div className="space-y-2 group">
+                    <Label htmlFor="slug" className="text-slate-700 font-medium group-focus-within:text-primary transition-colors">URL Slug <span className="text-red-500">*</span></Label>
+                    <div className="flex items-center shadow-sm rounded-xl overflow-hidden ring-1 ring-slate-200 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
+                      <span className="bg-slate-50 border-r border-slate-200 px-4 py-3 text-sm text-muted-foreground font-medium">
                         /blocks/
                       </span>
-                      <Input
+                      <input
                         id="slug"
                         name="slug"
                         value={formData.slug}
@@ -218,17 +238,17 @@ export default function BlockFormPage() {
                         required
                         disabled={loading}
                         placeholder="react-query"
-                        className="rounded-l-none font-mono text-sm"
+                        className="flex-1 bg-white px-4 py-3 text-sm outline-none font-mono text-slate-700 placeholder:text-slate-400"
                       />
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground pl-1">
                       Unique identifier for the block URL. Auto-generated from title.
                     </p>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="summaryDescription">Summary Description *</Label>
-                    <div className="min-h-[120px]">
+                    <Label htmlFor="summaryDescription" className="text-slate-700 font-medium">Summary Description <span className="text-red-500">*</span></Label>
+                    <div className="min-h-[120px] rounded-xl overflow-hidden border border-slate-200 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
                       <RichTextEditor
                         value={formData.summaryDescription}
                         onChange={(value) => setFormData(prev => ({ ...prev, summaryDescription: value }))}
@@ -237,24 +257,29 @@ export default function BlockFormPage() {
                         minHeight="120px"
                       />
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground pl-1">
                       Brief overview shown on the homepage card.
                     </p>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-none shadow-md">
-                <CardHeader className="border-b bg-white/50">
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-primary" />
-                    <CardTitle>Detailed Content</CardTitle>
+              <Card className="border-0 shadow-xl shadow-slate-200/40 bg-white/80 backdrop-blur-md overflow-hidden rounded-2xl ring-1 ring-slate-200/60">
+                <CardHeader className="border-b border-slate-100 bg-white/50 px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-50 rounded-lg">
+                      <FileText className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg font-semibold text-slate-900">Detailed Content</CardTitle>
+                      <p className="text-xs text-muted-foreground mt-0.5">Full documentation and examples</p>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="p-6">
                   <div className="space-y-2">
-                    <Label htmlFor="fullDescription">Full Description</Label>
-                    <div className="min-h-[400px]">
+                    <Label htmlFor="fullDescription" className="text-slate-700 font-medium">Full Description</Label>
+                    <div className="min-h-[400px] rounded-xl overflow-hidden border border-slate-200 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all bg-white">
                       <RichTextEditor
                         value={formData.fullDescription}
                         onChange={(value) => setFormData(prev => ({ ...prev, fullDescription: value }))}
@@ -269,36 +294,45 @@ export default function BlockFormPage() {
             </div>
 
             {/* Sidebar Column */}
-            <div className="space-y-6">
-              <Card className="border-none shadow-md">
-                <CardHeader className="border-b bg-white/50">
-                  <CardTitle className="text-base">Publishing</CardTitle>
+            <div className="space-y-8">
+              <Card className="border-0 shadow-xl shadow-slate-200/40 bg-white/80 backdrop-blur-md overflow-hidden rounded-2xl ring-1 ring-slate-200/60">
+                <CardHeader className="border-b border-slate-100 bg-white/50 px-6 py-4">
+                  <CardTitle className="text-base font-semibold text-slate-900">Publishing</CardTitle>
                 </CardHeader>
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-6 space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="status">Status</Label>
-                    <select
-                      id="status"
-                      name="status"
-                      value={formData.status}
-                      onChange={handleChange}
-                      required
-                      disabled={loading}
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    >
-                      <option value="PENDING">Pending Review</option>
-                      <option value="IN_DEVELOPMENT">In Development</option>
-                      <option value="PUBLISHED">Published</option>
-                    </select>
+                    <Label htmlFor="status" className="text-slate-700 font-medium">Status</Label>
+                    <div className="relative">
+                      <select
+                        id="status"
+                        name="status"
+                        value={formData.status}
+                        onChange={handleChange}
+                        required
+                        disabled={loading}
+                        className="flex h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary shadow-sm appearance-none cursor-pointer"
+                      >
+                        <option value="PENDING">Pending Review</option>
+                        <option value="IN_DEVELOPMENT">In Development</option>
+                        <option value="PUBLISHED">Published</option>
+                      </select>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                    </div>
                   </div>
                   
-                  <div className="pt-4 border-t">
+                  <div className="pt-4 border-t border-slate-100">
                     <div className="flex items-center justify-between text-sm mb-2">
                       <span className="text-muted-foreground">Current Status:</span>
-                      <Badge variant={
-                        formData.status === 'PUBLISHED' ? 'default' : 
-                        formData.status === 'IN_DEVELOPMENT' ? 'secondary' : 'outline'
-                      }>
+                      <Badge variant="outline" className={`
+                        ${formData.status === 'PUBLISHED' ? 'bg-green-50 text-green-700 border-green-200' : 
+                          formData.status === 'IN_DEVELOPMENT' ? 'bg-blue-50 text-blue-700 border-blue-200' : 
+                          'bg-amber-50 text-amber-700 border-amber-200'}
+                        px-3 py-1 rounded-full border
+                      `}>
                         {formData.status.replace('_', ' ')}
                       </Badge>
                     </div>
@@ -306,39 +340,43 @@ export default function BlockFormPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-none shadow-md">
-                <CardHeader className="border-b bg-white/50">
+              <Card className="border-0 shadow-xl shadow-slate-200/40 bg-white/80 backdrop-blur-md overflow-hidden rounded-2xl ring-1 ring-slate-200/60">
+                <CardHeader className="border-b border-slate-100 bg-white/50 px-6 py-4">
                   <div className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-primary" />
-                    <CardTitle className="text-base">External Links</CardTitle>
+                    <Globe className="w-4 h-4 text-indigo-500" />
+                    <CardTitle className="text-base font-semibold text-slate-900">External Links</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent className="p-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="url">Website URL</Label>
-                    <Input
-                      id="url"
-                      name="url"
-                      type="url"
-                      value={formData.url}
-                      onChange={handleChange}
-                      disabled={loading}
-                      placeholder="https://example.com"
-                    />
+                  <div className="space-y-2 group">
+                    <Label htmlFor="url" className="text-slate-700 font-medium group-focus-within:text-indigo-500 transition-colors">Website URL</Label>
+                    <div className="relative">
+                      <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-indigo-500 transition-colors" />
+                      <Input
+                        id="url"
+                        name="url"
+                        type="url"
+                        value={formData.url}
+                        onChange={handleChange}
+                        disabled={loading}
+                        placeholder="https://example.com"
+                        className="pl-10 h-11 rounded-xl border-slate-200 focus-visible:ring-indigo-500/20 focus-visible:border-indigo-500 transition-all shadow-sm"
+                      />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-none shadow-md">
-                <CardHeader className="border-b bg-white/50">
+              <Card className="border-0 shadow-xl shadow-slate-200/40 bg-white/80 backdrop-blur-md overflow-hidden rounded-2xl ring-1 ring-slate-200/60">
+                <CardHeader className="border-b border-slate-100 bg-white/50 px-6 py-4">
                   <div className="flex items-center gap-2">
-                    <ImageIcon className="w-4 h-4 text-primary" />
-                    <CardTitle className="text-base">Media</CardTitle>
+                    <ImageIcon className="w-4 h-4 text-pink-500" />
+                    <CardTitle className="text-base font-semibold text-slate-900">Media</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="iconPath">Icon Path</Label>
+                  <div className="space-y-2 group">
+                    <Label htmlFor="iconPath" className="text-slate-700 font-medium group-focus-within:text-pink-500 transition-colors">Icon Path</Label>
                     <Input
                       id="iconPath"
                       name="iconPath"
@@ -346,24 +384,33 @@ export default function BlockFormPage() {
                       onChange={handleChange}
                       disabled={loading}
                       placeholder="/uploads/icon.png"
+                      className="h-11 rounded-xl border-slate-200 focus-visible:ring-pink-500/20 focus-visible:border-pink-500 transition-all shadow-sm"
                     />
                     <p className="text-xs text-muted-foreground">
                       Relative path to the icon image on the server.
                     </p>
                   </div>
 
-                  {formData.iconPath && (
-                    <div className="mt-4 p-4 border rounded-lg bg-slate-50 flex items-center justify-center">
-                      <img 
-                        src={`http://localhost:5001${formData.iconPath}`}
-                        alt="Preview" 
-                        className="w-16 h-16 object-cover rounded-lg shadow-sm"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
-                    </div>
-                  )}
+                  <div className="mt-4 p-6 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50 flex flex-col items-center justify-center min-h-[120px] transition-colors hover:bg-slate-50 hover:border-slate-300">
+                    {formData.iconPath ? (
+                      <div className="relative group">
+                        <img 
+                          src={`http://localhost:5001${formData.iconPath}`}
+                          alt="Preview" 
+                          className="w-20 h-20 object-cover rounded-xl shadow-md bg-white"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-black/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                    ) : (
+                      <div className="text-center text-muted-foreground">
+                        <ImageIcon className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <span className="text-xs">No icon preview</span>
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -372,4 +419,23 @@ export default function BlockFormPage() {
       </main>
     </div>
   );
+}
+
+function EditIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+    </svg>
+  )
 }
