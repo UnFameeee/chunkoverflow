@@ -4,48 +4,104 @@
 
 @layer base {
   :root {
+    /* Emerald Green Theme - Primary */
+    --primary: 160 84% 39%;
+    --primary-foreground: 0 0% 98%;
+
+    /* Emerald Palette */
+    --primary-50: 160 84% 97%;
+    --primary-100: 160 84% 92%;
+    --primary-200: 160 84% 82%;
+    --primary-300: 160 84% 69%;
+    --primary-400: 160 84% 54%;
+    --primary-500: 160 84% 39%;
+    --primary-600: 160 79% 33%;
+    --primary-700: 160 76% 28%;
+    --primary-800: 160 72% 23%;
+    --primary-900: 160 68% 18%;
+    --primary-950: 160 100% 8%;
+
+    /* Background & Foreground */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 160 20% 8%;
+
+    /* Card */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 160 20% 8%;
+
+    /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 163 47% 63%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 163 47% 63%;
+    --popover-foreground: 160 20% 8%;
+
+    /* Secondary */
+    --secondary: 160 20% 96%;
+    --secondary-foreground: 160 20% 8%;
+
+    /* Muted */
+    --muted: 160 10% 96%;
+    --muted-foreground: 160 10% 45%;
+
+    /* Accent */
+    --accent: 160 20% 96%;
+    --accent-foreground: 160 20% 8%;
+
+    /* Additional Accent Colors */
+    --accent-teal: 170 70% 40%;
+    --accent-mint: 155 65% 50%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Border & Input */
+    --border: 160 10% 90%;
+    --input: 160 10% 90%;
+    --ring: 160 84% 39%;
+
+    /* Radius */
     --radius: 0.5rem;
+
+    /* Semantic Colors */
+    --success: 160 84% 39%;
+    --warning: 45 93% 47%;
+    --info: 199 89% 48%;
+    --error: 0 84% 60%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 163 47% 63%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --background: 160 20% 6%;
+    --foreground: 160 10% 98%;
+
+    --card: 160 20% 8%;
+    --card-foreground: 160 10% 98%;
+
+    --popover: 160 20% 8%;
+    --popover-foreground: 160 10% 98%;
+
+    --primary: 160 84% 45%;
+    --primary-foreground: 160 10% 98%;
+
+    --secondary: 160 20% 15%;
+    --secondary-foreground: 160 10% 98%;
+
+    --muted: 160 20% 15%;
+    --muted-foreground: 160 10% 65%;
+
+    --accent: 160 20% 15%;
+    --accent-foreground: 160 10% 98%;
+
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 163 47% 63%;
+    --destructive-foreground: 160 10% 98%;
+
+    --border: 160 20% 20%;
+    --input: 160 20% 20%;
+
+    --ring: 160 84% 45%;
+
+    --success: 160 84% 45%;
+    --warning: 45 93% 47%;
+    --info: 199 89% 48%;
+    --error: 0 62.8% 30.6%;
   }
 }
 
@@ -58,6 +114,26 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+  }
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
@@ -100,7 +176,7 @@
 }
 
 .ProseMirror blockquote {
-  border-left: 3px solid #e2e8f0;
+  border-left: 3px solid var(--primary-500);
   padding-left: 1em;
   margin: 1em 0;
   font-style: italic;
@@ -116,11 +192,11 @@
 }
 
 .ProseMirror a {
-  color: #7dd3c0;
+  color: hsl(var(--primary));
   text-decoration: underline;
   cursor: pointer;
 }
 
 .ProseMirror a:hover {
-  color: #5ab9a6;
+  color: hsl(var(--primary-600));
 }

@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Block {
+model Post {
   id                 Int      @id @default(autoincrement())
   title              String
   slug               String   @unique
@@ -20,7 +20,7 @@ model Block {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  @@map("blocks")
+  @@map("posts")
 }
 
 model User {

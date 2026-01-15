@@ -1,4 +1,4 @@
-export interface Block {
+export interface Post {
   id: number;
   title: string;
   slug: string;
@@ -20,8 +20,7 @@ export interface User {
 }
 
 export interface AuthResponse {
-  success: boolean;
-  data: {
+  result?: {
     accessToken: string;
     refreshToken: string;
     user: {
@@ -29,11 +28,11 @@ export interface AuthResponse {
       username: string;
     };
   };
+  message?: string;
 }
 
 export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
+  result?: T;
   message?: string;
 }
 
@@ -47,8 +46,8 @@ export interface PaginationMeta {
 }
 
 export interface PaginatedResponse<T> {
-  success: boolean;
-  data: T[];
-  pagination: PaginationMeta;
+  result?: T[];
+  pagination?: PaginationMeta;
   message?: string;
 }
+

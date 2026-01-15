@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import BlockDetailPage from './pages/BlockDetailPage';
+import PostDetailPage from './pages/PostDetailPage';
 import LoginPage from './pages/admin/LoginPage';
-import AdminBlocksPage from './pages/admin/AdminBlocksPage';
-import BlockFormPage from './pages/admin/BlockFormPage';
+import AdminPostsPage from './pages/admin/AdminPostsPage';
+import PostFormPage from './pages/admin/PostFormPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -12,33 +12,33 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/blocks/:slug" element={<BlockDetailPage />} />
-        
+        <Route path="/posts/:slug" element={<PostDetailPage />} />
+
         {/* Admin Routes */}
         <Route path="/admin/login" element={<LoginPage />} />
-        <Route 
-          path="/admin/blocks" 
+        <Route
+          path="/admin/posts"
           element={
             <ProtectedRoute>
-              <AdminBlocksPage />
+              <AdminPostsPage />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/admin/blocks/create" 
+        <Route
+          path="/admin/posts/create"
           element={
             <ProtectedRoute>
-              <BlockFormPage />
+              <PostFormPage />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/admin/blocks/:id/edit" 
+        <Route
+          path="/admin/posts/:id/edit"
           element={
             <ProtectedRoute>
-              <BlockFormPage />
+              <PostFormPage />
             </ProtectedRoute>
-          } 
+          }
         />
       </Routes>
     </BrowserRouter>

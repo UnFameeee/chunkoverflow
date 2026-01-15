@@ -40,7 +40,7 @@ export default function Header() {
               
               {isAuthenticated ? (
                 <div className="flex items-center gap-4">
-                  <Link to="/admin/blocks">
+                  <Link to="/admin/posts">
                     <Button variant="ghost" size="sm" className="gap-2">
                       <LayoutDashboard className="h-4 w-4" />
                       Dashboard
@@ -95,7 +95,7 @@ export default function Header() {
                 {isAuthenticated ? (
                   <div className="grid gap-4">
                     <Link 
-                      to="/admin/blocks"
+                      to="/admin/posts"
                       className="flex items-center gap-2 text-lg font-medium text-foreground hover:text-primary transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >

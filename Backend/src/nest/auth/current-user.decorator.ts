@@ -1,0 +1,17 @@
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+
+export interface CurrentUserData {
+  id: number;
+  username: string;
+  lastLogin: Date | null;
+  createdAt: Date;
+}
+
+export const CurrentUser = createParamDecorator(
+  (data: keyof CurrentUserData | undefined, ctx: ExecutionContext): CurrentUserData | string | number | Date | null => {
+    const request = ctx.switchToHttp().getRequest();
+    const user = request.user as CurrentUserData;
+
+    return data ? user[data] : user;
+  },
+);

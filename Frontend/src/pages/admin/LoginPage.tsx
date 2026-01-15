@@ -29,10 +29,10 @@ export default function LoginPage() {
           response.data.refreshToken,
           response.data.user
         );
-        navigate('/admin/blocks');
+        navigate('/admin/posts');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } catch (err: unknown) {
+      setError((err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,7 @@ export default function LoginPage() {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold tracking-tight">Welcome back</CardTitle>
-          <CardDescription className="text-base">Sign in to manage your content blocks</CardDescription>
+          <CardDescription className="text-base">Sign in to manage your content</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
