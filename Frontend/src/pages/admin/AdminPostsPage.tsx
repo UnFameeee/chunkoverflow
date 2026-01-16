@@ -21,7 +21,10 @@ import {
   Clock,
   MoreHorizontal,
   ArrowUpRight,
-  Sparkles
+  Sparkles,
+  TrendingUp,
+  Activity,
+  Zap
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { authService } from '@/services/authService';
@@ -35,25 +38,48 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { motion, AnimatePresence } from 'framer-motion';
+import { getStatusConfig, getStatusDotColor, getStatusLabel, type StatusType } from '@/lib/statusColors';
 
-const statusStyles: Record<string, { label: string; className: string; icon: React.ComponentType<{ className?: string }>; dotColor: string }> = {
-  PENDING: {
-    label: 'Pending',
-    className: 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100',
-    icon: Clock,
-    dotColor: 'bg-amber-500'
+const statusIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+  PENDING: Clock,
+  IN_DEVELOPMENT: FileText,
+  PUBLISHED: CheckCircle2,
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
   },
-  IN_DEVELOPMENT: {
-    label: 'In Development',
-    className: 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100',
-    icon: FileText,
-    dotColor: 'bg-blue-500'
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: 'spring',
+      stiffness: 300,
+      damping: 24,
+    },
   },
-  PUBLISHED: {
-    label: 'Published',
-    className: 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100',
-    icon: CheckCircle2,
-    dotColor: 'bg-emerald-500'
+};
+
+const statsVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 300,
+      damping: 20,
+    },
   },
 };
 
@@ -65,10 +91,19 @@ export default function AdminPostsPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [statsAnimating, setStatsAnimating] = useState(false);
 
   useEffect(() => {
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      setStatsAnimating(true);
+      const timer = setTimeout(() => setStatsAnimating(false), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
 
   const fetchPosts = async () => {
     try {
@@ -133,375 +168,652 @@ export default function AdminPostsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50 relative overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/5 to-transparent -z-10" />
-      <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-blue-400/10 rounded-full blur-3xl -z-10" />
-      <div className="absolute top-[20%] left-[-5%] w-72 h-72 bg-purple-400/10 rounded-full blur-3xl -z-10" />
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Animated Decorative Background Elements */}
+      <motion.div
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.05, 0.1, 0.05],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+        className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/5 to-transparent -z-10"
+      />
+      <motion.div
+        animate={{
+          x: [0, 50, 0],
+          y: [0, -30, 0],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+        className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10"
+      />
+      <motion.div
+        animate={{
+          x: [0, -40, 0],
+          y: [0, 30, 0],
+          scale: [1, 1.15, 1],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: 'easeInOut',
+          delay: 1,
+        }}
+        className="absolute top-[20%] left-[-5%] w-72 h-72 bg-accent-mint/10 rounded-full blur-3xl -z-10"
+      />
 
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-xl border-b sticky top-0 z-30 transition-all duration-200">
+      <motion.header
+        className="bg-card/80 backdrop-blur-xl border-b border-border/60 sticky top-0 z-30 transition-all duration-200"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      >
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-br from-primary to-primary-700 p-2.5 rounded-xl shadow-lg shadow-primary/20">
-                <LayoutDashboard className="h-5 w-5 text-white" />
-              </div>
+            <motion.div
+              className="flex items-center gap-3"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <motion.div
+                className="bg-gradient-to-br from-primary to-primary-600 p-2.5 rounded-xl shadow-lg shadow-primary/20"
+                whileHover={{ scale: 1.05, rotate: [0, -5, 5, -5, 0] }}
+                transition={{ duration: 0.5 }}
+              >
+                <LayoutDashboard className="h-5 w-5 text-primary-fg" />
+              </motion.div>
               <div>
-                <span className="text-lg font-bold text-slate-900 tracking-tight post leading-none">Admin</span>
+                <span className="text-lg font-bold tracking-tight block leading-none">Admin</span>
                 <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Dashboard</span>
               </div>
-            </div>
-            
+            </motion.div>
+
             {/* Desktop Header Actions */}
-            <div className="hidden md:flex items-center gap-4">
-              <div className="flex items-center gap-3 text-sm text-slate-600 bg-slate-100/50 px-4 py-2 rounded-full border border-slate-200/50 shadow-sm">
+            <motion.div
+              className="hidden md:flex items-center gap-4"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <motion.div
+                className="flex items-center gap-3 text-sm bg-muted/50 px-4 py-2 rounded-full border border-border/50 shadow-sm"
+                whileHover={{ scale: 1.02 }}
+              >
                 <div className="relative">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <div className="absolute inset-0 w-2 h-2 rounded-full bg-green-500 animate-ping opacity-75" />
+                  <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
+                  <div className="absolute inset-0 w-2 h-2 rounded-full bg-success animate-ping opacity-75" />
                 </div>
                 <span className="font-medium">{user?.username}</span>
-              </div>
-              <div className="h-6 w-px bg-slate-200" />
+              </motion.div>
+              <div className="h-6 w-px bg-border" />
               <Link to="/">
-                <Button variant="ghost" size="sm" className="gap-2 text-slate-600 hover:text-primary hover:bg-primary/5 rounded-full px-4">
+                <Button variant="ghost" size="sm" className="gap-2 hover:text-primary hover:bg-primary/5 rounded-full px-4">
                   <ExternalLink className="w-4 h-4" />
                   View Site
                 </Button>
               </Link>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={handleLogout} 
-                className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full px-4"
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full px-4"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
               </Button>
-            </div>
+            </motion.div>
 
             {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden p-2 text-slate-600 hover:text-primary transition-colors"
+            <motion.button
+              className="md:hidden p-2 hover:text-primary transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              whileTap={{ scale: 0.95 }}
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+              <AnimatePresence mode="wait">
+                {isMobileMenuOpen ? (
+                  <motion.div
+                    key="close"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <X className="w-6 h-6" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="menu"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Menu className="w-6 h-6" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
           </div>
         </div>
 
         {/* Mobile Menu Overlay */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden border-t bg-white/95 backdrop-blur-xl p-4 space-y-4 animate-in slide-in-from-top-5 absolute w-full shadow-xl z-40">
-            <div className="flex items-center gap-3 text-sm text-slate-600 bg-slate-50 px-4 py-3 rounded-xl border">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
-              Logged in as <span className="font-semibold">{user?.username}</span>
-            </div>
-            <Link to="/" className="post">
-              <Button variant="ghost" className="w-full justify-start gap-3 h-12 rounded-xl">
-                <ExternalLink className="w-5 h-5" />
-                View Site
-              </Button>
-            </Link>
-            <Button 
-              variant="ghost" 
-              className="w-full justify-start gap-3 text-red-600 hover:text-red-700 hover:bg-red-50 h-12 rounded-xl"
-              onClick={handleLogout}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              className="md:hidden border-t bg-card/95 backdrop-blur-xl p-4 space-y-4 shadow-xl z-40"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
             >
-              <LogOut className="w-5 h-5" />
-              Logout
-            </Button>
-          </div>
-        )}
-      </header>
+              <div className="flex items-center gap-3 text-sm bg-muted/50 px-4 py-3 rounded-xl border">
+                <div className="w-2 h-2 rounded-full bg-success" />
+                Logged in as <span className="font-semibold">{user?.username}</span>
+              </div>
+              <Link to="/" className="block">
+                <Button variant="ghost" className="w-full justify-start gap-3 h-12 rounded-xl">
+                  <ExternalLink className="w-5 h-5" />
+                  View Site
+                </Button>
+              </Link>
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10 h-12 rounded-xl"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-5 h-5" />
+                Logout
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
 
-      <main className="container mx-auto px-4 py-8 space-y-8">
+      <motion.main
+        className="container mx-auto px-4 py-8 space-y-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+      >
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-white/60 backdrop-blur-sm shadow-sm border-slate-200/60 hover:shadow-md hover:bg-white transition-all duration-300 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Posts</CardTitle>
-              <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                <Package className="h-4 w-4 text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-slate-900">{stats.total}</div>
-              <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                <ArrowUpRight className="w-3 h-3 text-green-500" />
-                All content posts
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-white/60 backdrop-blur-sm shadow-sm border-slate-200/60 hover:shadow-md hover:bg-white transition-all duration-300 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Published</CardTitle>
-              <div className="p-2 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors">
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-slate-900">{stats.published}</div>
-              <p className="text-xs text-muted-foreground mt-1">Live on site</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-white/60 backdrop-blur-sm shadow-sm border-slate-200/60 hover:shadow-md hover:bg-white transition-all duration-300 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Drafts & Pending</CardTitle>
-              <div className="p-2 bg-amber-100 rounded-lg group-hover:bg-amber-200 transition-colors">
-                <Clock className="h-4 w-4 text-amber-600" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-slate-900">{stats.pending}</div>
-              <p className="text-xs text-muted-foreground mt-1">Work in progress</p>
-            </CardContent>
-          </Card>
-        </div>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          <motion.div variants={statsVariants} whileHover={{ y: -4, scale: 1.02 }} transition={{ type: 'spring', stiffness: 400, damping: 17 }}>
+            <Card className="bg-card/60 backdrop-blur-sm shadow-sm border-border/60 hover:shadow-xl hover:bg-card transition-all duration-300 group overflow-hidden relative">
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Posts</CardTitle>
+                <motion.div
+                  className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors"
+                  whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Package className="h-4 w-4 text-primary" />
+                </motion.div>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                <motion.div
+                  className="text-3xl font-bold"
+                  animate={statsAnimating ? { scale: [1, 1.1, 1] } : {}}
+                  transition={{ duration: 0.5 }}
+                >
+                  {stats.total}
+                </motion.div>
+                <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                  <ArrowUpRight className="w-3 h-3 text-primary" />
+                  All content posts
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <motion.div variants={statsVariants} whileHover={{ y: -4, scale: 1.02 }} transition={{ type: 'spring', stiffness: 400, damping: 17 }}>
+            <Card className="bg-card/60 backdrop-blur-sm shadow-sm border-border/60 hover:shadow-xl hover:bg-card transition-all duration-300 group overflow-hidden relative">
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Published</CardTitle>
+                <motion.div
+                  className="p-2 bg-success-bg rounded-lg group-hover:bg-success-border transition-colors"
+                  whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <CheckCircle2 className="h-4 w-4 text-success" />
+                </motion.div>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                <motion.div
+                  className="text-3xl font-bold"
+                  animate={statsAnimating ? { scale: [1, 1.1, 1] } : {}}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                >
+                  {stats.published}
+                </motion.div>
+                <p className="text-xs text-muted-foreground mt-1">Live on site</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div variants={statsVariants} whileHover={{ y: -4, scale: 1.02 }} transition={{ type: 'spring', stiffness: 400, damping: 17 }}>
+            <Card className="bg-card/60 backdrop-blur-sm shadow-sm border-border/60 hover:shadow-xl hover:bg-card transition-all duration-300 group overflow-hidden relative">
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Drafts & Pending</CardTitle>
+                <motion.div
+                  className="p-2 bg-warning-bg rounded-lg group-hover:bg-warning-border transition-colors"
+                  whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Clock className="h-4 w-4 text-warning" />
+                </motion.div>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                <motion.div
+                  className="text-3xl font-bold"
+                  animate={statsAnimating ? { scale: [1, 1.1, 1] } : {}}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  {stats.pending}
+                </motion.div>
+                <p className="text-xs text-muted-foreground mt-1">Work in progress</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          className="flex flex-col md:flex-row md:items-end justify-between gap-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
           <div>
-            <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Content Management</h2>
+            <h2 className="text-3xl font-bold tracking-tight">Content Management</h2>
             <p className="text-muted-foreground mt-1 text-lg">Manage and organize your content posts.</p>
           </div>
-          <Link to="/admin/posts/create">
-            <Button className="w-full md:w-auto gap-2 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 h-11 px-6 rounded-full bg-gradient-to-r from-primary to-primary-600 hover:from-primary-600 hover:to-primary-700 border-0">
-              <Plus className="w-5 h-5" />
-              Create New Post
-            </Button>
-          </Link>
-        </div>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Link to="/admin/posts/create">
+              <Button className="w-full md:w-auto gap-2 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 h-11 px-6 rounded-full bg-gradient-to-r from-primary to-primary-600 hover:from-primary-600 hover:to-primary-700 border-0 relative overflow-hidden">
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/20 to-primary/0"
+                  animate={{
+                    translateX: ['-100%', '100%'],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 3,
+                    ease: 'linear',
+                  }}
+                />
+                <Plus className="w-5 h-5 relative z-10" />
+                <span className="relative z-10">Create New Post</span>
+              </Button>
+            </Link>
+          </motion.div>
+        </motion.div>
 
-        <Card className="border-0 shadow-xl shadow-slate-200/50 bg-white/80 backdrop-blur-md overflow-hidden rounded-2xl ring-1 ring-slate-200">
-          <div className="p-6 border-b border-slate-100 flex flex-col md:flex-row gap-4 justify-between md:items-center bg-white/50">
-            <div className="relative w-full md:w-96 group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-              <Input 
-                placeholder="Search by title or slug..." 
-                className="pl-10 bg-white border-slate-200 focus-visible:ring-primary/20 focus-visible:border-primary h-11 rounded-xl transition-all shadow-sm group-hover:shadow-md"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            <div className="flex items-center gap-3 w-full md:w-auto">
-              <div className="relative w-full md:w-48">
-                <select 
-                  className="w-full h-11 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary shadow-sm cursor-pointer hover:border-primary/50 transition-colors appearance-none"
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Card className="border-0 shadow-xl shadow-border/10 bg-card/80 backdrop-blur-md overflow-hidden rounded-2xl ring-1 ring-border/60">
+            <div className="p-6 border-b border-border/60 flex flex-col md:flex-row gap-4 justify-between md:items-center bg-card/50">
+              <motion.div
+                className="relative w-full md:w-96 group"
+                whileFocus={{ scale: 1.02 }}
+              >
+                <motion.div
+                  animate={{
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 3,
+                  }}
                 >
-                  <option value="ALL">All Status</option>
-                  <option value="PUBLISHED">Published</option>
-                  <option value="PENDING">Pending</option>
-                  <option value="IN_DEVELOPMENT">In Development</option>
-                </select>
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-0">
-            {loading ? (
-              <div className="text-center py-32">
-                <div className="relative inline-post">
-                  <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
-                  <div className="relative bg-white p-4 rounded-full shadow-lg">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                </motion.div>
+                <Input
+                  placeholder="Search by title or slug..."
+                  className="pl-10 bg-card border-border/60 focus-visible:ring-primary/20 focus-visible:border-primary h-11 rounded-xl transition-all shadow-sm group-hover:shadow-md"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </motion.div>
+              <div className="flex items-center gap-3 w-full md:w-auto">
+                <div className="relative w-full md:w-48">
+                  <motion.select
+                    className="w-full h-11 rounded-xl border border-border/60 bg-card px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary shadow-sm cursor-pointer hover:border-primary/50 transition-colors appearance-none"
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    whileHover={{ scale: 1.02 }}
+                    whileFocus={{ scale: 1.02 }}
+                  >
+                    <option value="ALL">All Status</option>
+                    <option value="PUBLISHED">Published</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="IN_DEVELOPMENT">In Development</option>
+                  </motion.select>
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </div>
                 </div>
-                <p className="mt-6 text-muted-foreground font-medium animate-pulse">Loading your content...</p>
               </div>
-            ) : filteredPosts.length === 0 ? (
-              <div className="text-center py-32 px-4">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-50 mb-6 shadow-inner">
-                  <Search className="w-10 h-10 text-slate-300" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900">No posts found</h3>
-                <p className="text-muted-foreground mt-2 max-w-sm mx-auto">
-                  We couldn't find any posts matching your search. Try adjusting your filters or create a new one.
-                </p>
-                <Button 
-                  variant="outline" 
-                  className="mt-6 rounded-full"
-                  onClick={() => { setSearch(''); setStatusFilter('ALL'); }}
-                >
-                  Clear Filters
-                </Button>
-              </div>
-            ) : (
-              <>
-                {/* Desktop Table View */}
-                <div className="hidden md:post overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="bg-slate-50/50 border-b border-slate-100 text-xs uppercase text-muted-foreground font-semibold tracking-wider">
-                      <tr>
-                        <th className="px-8 py-5 w-[45%]">Post Details</th>
-                        <th className="px-6 py-5">Status</th>
-                        <th className="px-6 py-5">Created</th>
-                        <th className="px-8 py-5 text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
+            </div>
+
+            <div className="p-0">
+              <AnimatePresence mode="wait">
+                {loading ? (
+                  <motion.div
+                    key="loading"
+                    className="text-center py-32"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <div className="relative inline-block">
+                      <motion.div
+                        className="absolute inset-0 bg-primary/20 rounded-full blur-xl"
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          opacity: [0.3, 0.6, 0.3],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                        }}
+                      />
+                      <div className="relative bg-card p-4 rounded-full shadow-lg">
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                        >
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                        </motion.div>
+                      </div>
+                    </div>
+                    <motion.p
+                      className="mt-6 text-muted-foreground font-medium"
+                      animate={{ opacity: [0.5, 1, 0.5] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      Loading your content...
+                    </motion.p>
+                  </motion.div>
+                ) : filteredPosts.length === 0 ? (
+                  <motion.div
+                    key="empty"
+                    className="text-center py-32 px-4"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                  >
+                    <motion.div
+                      className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-muted/50 mb-6 shadow-inner"
+                      animate={{
+                        rotate: [0, -10, 10, -10, 0],
+                      }}
+                      transition={{
+                        duration: 0.5,
+                        repeat: Infinity,
+                        repeatDelay: 0.5,
+                      }}
+                    >
+                      <Search className="w-10 h-10 text-muted-foreground/50" />
+                    </motion.div>
+                    <h3 className="text-xl font-bold">No posts found</h3>
+                    <p className="text-muted-foreground mt-2 max-w-sm mx-auto">
+                      We couldn't find any posts matching your search. Try adjusting your filters or create a new one.
+                    </p>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button
+                        variant="outline"
+                        className="mt-6 rounded-full"
+                        onClick={() => { setSearch(''); setStatusFilter('ALL'); }}
+                      >
+                        Clear Filters
+                      </Button>
+                    </motion.div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="content"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    {/* Desktop Table View */}
+                    <motion.div
+                      variants={containerVariants}
+                      initial="hidden"
+                      animate="visible"
+                      className="hidden md:block overflow-x-auto"
+                    >
+                      <table className="w-full text-sm text-left">
+                        <thead className="bg-muted/50 border-b border-border/60 text-xs uppercase text-muted-foreground font-semibold tracking-wider">
+                          <tr>
+                            <th className="px-8 py-5 w-[45%]">Post Details</th>
+                            <th className="px-6 py-5">Status</th>
+                            <th className="px-6 py-5">Created</th>
+                            <th className="px-8 py-5 text-right">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border/40">
+                          {filteredPosts.map((post, index) => {
+                            return (
+                              <motion.tr
+                                key={post.id}
+                                variants={itemVariants}
+                                className="hover:bg-muted/30 transition-colors group"
+                              >
+                                <td className="px-8 py-5">
+                                  <div className="flex items-center gap-5">
+                                    <motion.div
+                                      className="relative"
+                                      whileHover={{ scale: 1.1, rotate: [0, -5, 5, -5, 0] }}
+                                      transition={{ duration: 0.5 }}
+                                    >
+                                      {post.iconPath ? (
+                                        <img
+                                          src={`http://localhost:5001${post.iconPath}`}
+                                          alt={post.title}
+                                          className="w-12 h-12 rounded-xl object-cover border border-border/60 shadow-sm bg-card"
+                                        />
+                                      ) : (
+                                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-muted to-muted/60 flex items-center justify-center border border-border/60 shadow-sm">
+                                          <Package className="w-6 h-6 text-muted-foreground" />
+                                        </div>
+                                      )}
+                                      <motion.div
+                                        className="absolute -bottom-1 -right-1 w-5 h-5 bg-card rounded-full flex items-center justify-center shadow-sm border border-border/60"
+                                        initial={{ scale: 0, opacity: 0 }}
+                                        whileHover={{ scale: 1, opacity: 1 }}
+                                        transition={{ duration: 0.2 }}
+                                      >
+                                        <Sparkles className="w-3 h-3 text-primary" />
+                                      </motion.div>
+                                    </motion.div>
+                                    <div>
+                                      <div className="font-semibold text-base group-hover:text-primary transition-colors">{post.title}</div>
+                                      <div className="text-xs text-muted-foreground font-mono mt-1 bg-muted/50 px-2 py-0.5 rounded-md inline-block">
+                                        /{post.slug}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-6 py-5">
+                                  <Badge
+                                    variant={getStatusConfig(post.status as StatusType).badgeVariant}
+                                    className="gap-2 pl-2 pr-3 py-1.5 rounded-full border-0 shadow-sm ring-1 ring-inset"
+                                  >
+                                    <motion.span
+                                      className={`w-1.5 h-1.5 rounded-full ${getStatusDotColor(post.status as StatusType)}`}
+                                      animate={{ scale: [1, 1.2, 1] }}
+                                      transition={{ duration: 2, repeat: Infinity }}
+                                    />
+                                    {getStatusLabel(post.status as StatusType)}
+                                  </Badge>
+                                </td>
+                                <td className="px-6 py-5 text-muted-foreground font-medium">
+                                  {new Date(post.createdAt).toLocaleDateString(undefined, {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                  })}
+                                </td>
+                                <td className="px-8 py-5 text-right">
+                                  <div className="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                                    <Link to={`/admin/posts/${post.id}/edit`}>
+                                      <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-blue-600 hover:bg-blue-50 transition-all">
+                                          <Edit className="w-4 h-4" />
+                                        </Button>
+                                      </motion.div>
+                                    </Link>
+                                    <DropdownMenu>
+                                      <DropdownMenuTrigger asChild>
+                                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                                          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-all">
+                                            <MoreHorizontal className="w-4 h-4" />
+                                          </Button>
+                                        </motion.div>
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent align="end" className="w-48 rounded-xl shadow-xl border-border/60">
+                                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                        <DropdownMenuItem onClick={() => handleArchive(post.id)} className="cursor-pointer">
+                                          <Archive className="w-4 h-4 mr-2 text-muted-foreground" />
+                                          Archive Post
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer" onClick={() => handleDelete(post.id)}>
+                                          <Trash2 className="w-4 h-4 mr-2" />
+                                          Delete Permanently
+                                        </DropdownMenuItem>
+                                      </DropdownMenuContent>
+                                    </DropdownMenu>
+                                  </div>
+                                </td>
+                              </motion.tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </motion.div>
+
+                    {/* Mobile Card View */}
+                    <motion.div
+                      variants={containerVariants}
+                      initial="hidden"
+                      animate="visible"
+                      className="md:hidden divide-y divide-border/40"
+                    >
                       {filteredPosts.map((post, index) => {
                         return (
-                          <tr 
-                            key={post.id} 
-                            className="hover:bg-slate-50/80 transition-colors group animate-in fade-in slide-in-from-bottom-2 duration-500"
-                            style={{ animationDelay: `${index * 50}ms` }}
+                          <motion.div
+                            key={post.id}
+                            variants={itemVariants}
+                            className="p-5 space-y-4"
                           >
-                            <td className="px-8 py-5">
-                              <div className="flex items-center gap-5">
-                                <div className="relative group-hover:scale-105 transition-transform duration-300">
-                                  {post.iconPath ? (
-                                    <img 
-                                      src={`http://localhost:5001${post.iconPath}`} 
-                                      alt={post.title}
-                                      className="w-12 h-12 rounded-xl object-cover border border-slate-100 shadow-sm bg-white"
-                                    />
-                                  ) : (
-                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center border border-slate-200 shadow-sm">
-                                      <Package className="w-6 h-6 text-slate-400" />
-                                    </div>
-                                  )}
-                                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100 opacity-0 group-hover:opacity-100 transition-opacity scale-0 group-hover:scale-100">
-                                    <Sparkles className="w-3 h-3 text-yellow-500" />
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex items-center gap-4">
+                                {post.iconPath ? (
+                                  <img
+                                    src={`http://localhost:5001${post.iconPath}`}
+                                    alt={post.title}
+                                    className="w-12 h-12 rounded-xl object-cover border border-border/60 shadow-sm bg-card"
+                                  />
+                                ) : (
+                                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-muted to-muted/60 flex items-center justify-center border border-border/60 shadow-sm">
+                                    <Package className="w-6 h-6 text-muted-foreground" />
                                   </div>
-                                </div>
+                                )}
                                 <div>
-                                  <div className="font-semibold text-slate-900 text-base group-hover:text-primary transition-colors">{post.title}</div>
-                                  <div className="text-xs text-muted-foreground font-mono mt-1 bg-slate-100 px-2 py-0.5 rounded-md inline-post">
-                                    /{post.slug}
-                                  </div>
+                                  <div className="font-semibold text-lg">{post.title}</div>
+                                  <div className="text-xs text-muted-foreground font-mono bg-muted/50 px-2 py-0.5 rounded-md inline-block mt-1">/{post.slug}</div>
                                 </div>
                               </div>
-                            </td>
-                            <td className="px-6 py-5">
-                              <Badge variant="outline" className={`gap-2 pl-2 pr-3 py-1.5 rounded-full border-0 shadow-sm ring-1 ring-inset ${statusStyles[post.status]?.className}`}>
-                                <span className={`w-1.5 h-1.5 rounded-full ${statusStyles[post.status]?.dotColor} animate-pulse`} />
-                                {statusStyles[post.status]?.label}
-                              </Badge>
-                            </td>
-                            <td className="px-6 py-5 text-muted-foreground font-medium">
-                              {new Date(post.createdAt).toLocaleDateString(undefined, {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric'
-                              })}
-                            </td>
-                            <td className="px-8 py-5 text-right">
-                              <div className="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
-                                <Link to={`/admin/posts/${post.id}/edit`}>
-                                  <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all hover:scale-110">
-                                    <Edit className="w-4 h-4" />
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="-mr-2 h-9 w-9 rounded-full">
+                                    <MoreHorizontal className="w-5 h-5 text-muted-foreground" />
                                   </Button>
-                                </Link>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all hover:scale-110">
-                                      <MoreHorizontal className="w-4 h-4" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end" className="w-48 rounded-xl shadow-xl border-slate-100">
-                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <DropdownMenuItem onClick={() => handleArchive(post.id)} className="cursor-pointer">
-                                      <Archive className="w-4 h-4 mr-2 text-slate-500" />
-                                      Archive Post
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer" onClick={() => handleDelete(post.id)}>
-                                      <Trash2 className="w-4 h-4 mr-2" />
-                                      Delete Permanently
-                                    </DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </div>
-                            </td>
-                          </tr>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-48 rounded-xl shadow-xl border-border/60">
+                                  <DropdownMenuItem asChild>
+                                    <Link to={`/admin/posts/${post.id}/edit`} className="cursor-pointer">
+                                      <Edit className="w-4 h-4 mr-2" />
+                                      Edit Post
+                                    </Link>
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleArchive(post.id)} className="cursor-pointer">
+                                    <Archive className="w-4 h-4 mr-2" />
+                                    Archive
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer" onClick={() => handleDelete(post.id)}>
+                                    <Trash2 className="w-4 h-4 mr-2" />
+                                    Delete
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+
+                            <div className="flex items-center justify-between text-sm pt-2">
+                              <Badge
+                                variant={getStatusConfig(post.status as StatusType).badgeVariant}
+                                className="gap-1.5 pl-1.5 pr-2.5 py-1 rounded-full border-0 shadow-sm ring-1 ring-inset"
+                              >
+                                <motion.span
+                                  className={`w-1.5 h-1.5 rounded-full ${getStatusDotColor(post.status as StatusType)}`}
+                                  animate={{ scale: [1, 1.2, 1] }}
+                                  transition={{ duration: 2, repeat: Infinity }}
+                                />
+                                {getStatusLabel(post.status as StatusType)}
+                              </Badge>
+                              <span className="text-muted-foreground font-medium text-xs">
+                                {new Date(post.createdAt).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </motion.div>
                         );
                       })}
-                    </tbody>
-                  </table>
-                </div>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-                {/* Mobile Card View */}
-                <div className="md:hidden divide-y divide-slate-100">
-                  {filteredPosts.map((post, index) => {
-                    return (
-                      <div 
-                        key={post.id} 
-                        className="p-5 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500"
-                        style={{ animationDelay: `${index * 50}ms` }}
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex items-center gap-4">
-                            {post.iconPath ? (
-                              <img 
-                                src={`http://localhost:5001${post.iconPath}`} 
-                                alt={post.title}
-                                className="w-12 h-12 rounded-xl object-cover border border-slate-100 shadow-sm bg-white"
-                              />
-                            ) : (
-                              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center border border-slate-200 shadow-sm">
-                                <Package className="w-6 h-6 text-slate-400" />
-                              </div>
-                            )}
-                            <div>
-                              <div className="font-semibold text-slate-900 text-lg">{post.title}</div>
-                              <div className="text-xs text-muted-foreground font-mono bg-slate-100 px-2 py-0.5 rounded-md inline-post mt-1">/{post.slug}</div>
-                            </div>
-                          </div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="-mr-2 h-9 w-9 rounded-full">
-                                <MoreHorizontal className="w-5 h-5 text-slate-400" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48 rounded-xl shadow-xl">
-                              <DropdownMenuItem asChild>
-                                <Link to={`/admin/posts/${post.id}/edit`} className="cursor-pointer">
-                                  <Edit className="w-4 h-4 mr-2" />
-                                  Edit Post
-                                </Link>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleArchive(post.id)} className="cursor-pointer">
-                                <Archive className="w-4 h-4 mr-2" />
-                                Archive
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer" onClick={() => handleDelete(post.id)}>
-                                <Trash2 className="w-4 h-4 mr-2" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                        
-                        <div className="flex items-center justify-between text-sm pt-2">
-                          <Badge variant="outline" className={`gap-1.5 pl-1.5 pr-2.5 py-1 rounded-full border-0 shadow-sm ring-1 ring-inset ${statusStyles[post.status]?.className}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${statusStyles[post.status]?.dotColor}`} />
-                            {statusStyles[post.status]?.label}
-                          </Badge>
-                          <span className="text-muted-foreground font-medium text-xs">
-                            {new Date(post.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
-            )}
-          </div>
-          
-          <div className="bg-slate-50/50 border-t p-4 text-xs text-muted-foreground text-center font-medium">
-            Showing {filteredPosts.length} of {posts.length} posts
-          </div>
-        </Card>
-      </main>
+            <div className="bg-muted/30 border-t border-border/60 p-4 text-xs text-muted-foreground text-center font-medium">
+              Showing {filteredPosts.length} of {posts.length} posts
+            </div>
+          </Card>
+        </motion.div>
+      </motion.main>
     </div>
   );
 }

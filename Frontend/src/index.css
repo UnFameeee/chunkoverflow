@@ -4,11 +4,16 @@
 
 @layer base {
   :root {
-    /* Emerald Green Theme - Primary */
+    /* ==========================================
+       PRIMARY COLORS - Emerald Theme
+       Base hue: 160 degrees
+       ========================================== */
     --primary: 160 84% 39%;
-    --primary-foreground: 0 0% 98%;
+    --primary-hover: 160 84% 34%;
+    --primary-active: 160 84% 29%;
+    --primary-fg: 0 0% 100%;
 
-    /* Emerald Palette */
+    /* Primary Palette (for gradients, etc.) */
     --primary-50: 160 84% 97%;
     --primary-100: 160 84% 92%;
     --primary-200: 160 84% 82%;
@@ -21,87 +26,146 @@
     --primary-900: 160 68% 18%;
     --primary-950: 160 100% 8%;
 
-    /* Background & Foreground */
-    --background: 0 0% 100%;
-    --foreground: 160 20% 8%;
+    /* ==========================================
+       NEUTRAL COLORS
+       ========================================== */
+    --bg-primary: 0 0% 100%;
+    --bg-secondary: 160 10% 96%;
+    --bg-tertiary: 160 10% 92%;
+    --bg-muted: 160 10% 96%;
+    --bg-card: 0 0% 100%;
+    --bg-popover: 0 0% 100%;
 
-    /* Card */
-    --card: 0 0% 100%;
-    --card-foreground: 160 20% 8%;
+    --fg-primary: 160 20% 8%;
+    --fg-secondary: 160 10% 45%;
+    --fg-muted: 160 10% 55%;
+    --fg-disabled: 160 10% 75%;
+    --fg-card: 160 20% 8%;
+    --fg-popover: 160 20% 8%;
 
-    /* Popover */
-    --popover: 0 0% 100%;
-    --popover-foreground: 160 20% 8%;
+    --border-default: 160 10% 90%;
+    --border-strong: 160 10% 80%;
+    --border-input: 160 10% 90%;
+    --border-card: 160 10% 90%;
 
-    /* Secondary */
-    --secondary: 160 20% 96%;
-    --secondary-foreground: 160 20% 8%;
+    /* ==========================================
+       SEMANTIC COLORS
+       ========================================== */
+    /* Success / Published */
+    --success: 160 84% 39%;
+    --success-bg: 160 84% 95%;
+    --success-border: 160 84% 80%;
+    --success-fg: 160 80% 25%;
 
-    /* Muted */
-    --muted: 160 10% 96%;
-    --muted-foreground: 160 10% 45%;
+    /* Warning / Pending */
+    --warning: 45 93% 47%;
+    --warning-bg: 45 93% 95%;
+    --warning-border: 45 93% 80%;
+    --warning-fg: 45 90% 20%;
 
-    /* Accent */
-    --accent: 160 20% 96%;
-    --accent-foreground: 160 20% 8%;
+    /* Info / In Development */
+    --info: 199 89% 48%;
+    --info-bg: 199 89% 95%;
+    --info-border: 199 89% 80%;
+    --info-fg: 199 85% 20%;
 
-    /* Additional Accent Colors */
-    --accent-teal: 170 70% 40%;
-    --accent-mint: 155 65% 50%;
-
-    /* Destructive */
+    /* Error / Destructive */
+    --error: 0 84% 60%;
+    --error-bg: 0 84% 95%;
+    --error-border: 0 84% 80%;
+    --error-fg: 0 80% 25%;
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-fg: 0 0% 98%;
 
-    /* Border & Input */
-    --border: 160 10% 90%;
-    --input: 160 10% 90%;
+    /* ==========================================
+       COMPONENT COLORS
+       ========================================== */
+    --accent: 160 20% 96%;
+    --accent-fg: 160 20% 8%;
+    --muted: 160 10% 96%;
+    --muted-fg: 160 10% 45%;
+
     --ring: 160 84% 39%;
+
+    /* Additional accent colors */
+    --accent-mint: 160 50% 90%;
+    --accent-teal: 175 60% 88%;
+    --accent-cyan: 190 60% 88%;
 
     /* Radius */
     --radius: 0.5rem;
-
-    /* Semantic Colors */
-    --success: 160 84% 39%;
-    --warning: 45 93% 47%;
-    --info: 199 89% 48%;
-    --error: 0 84% 60%;
   }
 
   .dark {
-    --background: 160 20% 6%;
-    --foreground: 160 10% 98%;
+    /* ==========================================
+       PRIMARY COLORS - Dark Mode
+       ========================================== */
+    --primary: 160 84% 50%;
+    --primary-hover: 160 84% 45%;
+    --primary-active: 160 84% 40%;
+    --primary-fg: 160 10% 98%;
 
-    --card: 160 20% 8%;
-    --card-foreground: 160 10% 98%;
+    /* ==========================================
+       NEUTRAL COLORS - Dark Mode
+       ========================================== */
+    --bg-primary: 160 20% 6%;
+    --bg-secondary: 160 20% 8%;
+    --bg-tertiary: 160 20% 12%;
+    --bg-muted: 160 20% 15%;
+    --bg-card: 160 20% 8%;
+    --bg-popover: 160 20% 8%;
 
-    --popover: 160 20% 8%;
-    --popover-foreground: 160 10% 98%;
+    --fg-primary: 160 10% 98%;
+    --fg-secondary: 160 10% 75%;
+    --fg-muted: 160 10% 65%;
+    --fg-disabled: 160 10% 40%;
+    --fg-card: 160 10% 98%;
+    --fg-popover: 160 10% 98%;
 
-    --primary: 160 84% 45%;
-    --primary-foreground: 160 10% 98%;
+    --border-default: 160 20% 20%;
+    --border-strong: 160 20% 30%;
+    --border-input: 160 20% 20%;
+    --border-card: 160 20% 20%;
 
-    --secondary: 160 20% 15%;
-    --secondary-foreground: 160 10% 98%;
+    /* ==========================================
+       SEMANTIC COLORS - Dark Mode
+       ========================================== */
+    --success: 160 84% 55%;
+    --success-bg: 160 84% 15%;
+    --success-border: 160 84% 25%;
+    --success-fg: 160 70% 85%;
 
-    --muted: 160 20% 15%;
-    --muted-foreground: 160 10% 65%;
+    --warning: 45 93% 60%;
+    --warning-bg: 45 93% 15%;
+    --warning-border: 45 93% 25%;
+    --warning-fg: 45 85% 85%;
 
-    --accent: 160 20% 15%;
-    --accent-foreground: 160 10% 98%;
+    --info: 199 89% 65%;
+    --info-bg: 199 89% 15%;
+    --info-border: 199 89% 25%;
+    --info-fg: 199 80% 85%;
 
+    --error: 0 72% 55%;
+    --error-bg: 0 72% 15%;
+    --error-border: 0 72% 25%;
+    --error-fg: 0 70% 85%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 160 10% 98%;
+    --destructive-fg: 160 10% 98%;
 
-    --border: 160 20% 20%;
-    --input: 160 20% 20%;
+    /* ==========================================
+       COMPONENT COLORS - Dark Mode
+       ========================================== */
+    --accent: 160 20% 15%;
+    --accent-fg: 160 10% 98%;
+    --muted: 160 20% 15%;
+    --muted-fg: 160 10% 65%;
 
-    --ring: 160 84% 45%;
+    --ring: 160 84% 50%;
 
-    --success: 160 84% 45%;
-    --warning: 45 93% 47%;
-    --info: 199 89% 48%;
-    --error: 0 62.8% 30.6%;
+    /* Additional accent colors - Dark Mode */
+    --accent-mint: 160 30% 25%;
+    --accent-teal: 175 30% 28%;
+    --accent-cyan: 190 30% 28%;
   }
 }
 
@@ -113,7 +177,7 @@
     @apply overflow-x-hidden;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-bg-primary text-fg-primary antialiased;
   }
 }
 
@@ -143,7 +207,7 @@ html {
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {
-  color: #adb5bd;
+  color: hsl(var(--fg-disabled));
   content: attr(data-placeholder);
   float: left;
   height: 0;
@@ -176,15 +240,15 @@ html {
 }
 
 .ProseMirror blockquote {
-  border-left: 3px solid var(--primary-500);
+  border-left: 3px solid hsl(var(--primary));
   padding-left: 1em;
   margin: 1em 0;
   font-style: italic;
-  color: #64748b;
+  color: hsl(var(--fg-muted));
 }
 
 .ProseMirror code {
-  background-color: #f1f5f9;
+  background-color: hsl(var(--bg-tertiary));
   padding: 0.2em 0.4em;
   border-radius: 0.25em;
   font-size: 0.9em;
@@ -198,5 +262,5 @@ html {
 }
 
 .ProseMirror a:hover {
-  color: hsl(var(--primary-600));
+  color: hsl(var(--primary-hover));
 }

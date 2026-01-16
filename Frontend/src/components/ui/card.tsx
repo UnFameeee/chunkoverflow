@@ -42,7 +42,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <MotionCard
         ref={cardRef}
         className={cn(
-          "rounded-lg border bg-card text-card-foreground shadow-sm",
+          "rounded-lg border bg-bg-card text-fg-card shadow-sm",
           className
         )}
         whileHover={enableHover ? {
@@ -103,7 +103,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-sm text-fg-muted", className)}
     {...props}
   />
 ))

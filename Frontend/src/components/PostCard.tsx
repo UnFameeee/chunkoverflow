@@ -6,29 +6,12 @@ import { Package, ArrowRight, Calendar, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import RichTextViewer from './RichTextViewer';
-import { motion, useMotionValue, useTransform, MotionValue } from 'framer-motion';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { getStatusConfig, type StatusType } from '@/lib/statusColors';
 
 interface PostCardProps {
   post: Post;
 }
-
-const statusConfig = {
-  PENDING: {
-    label: 'Pending',
-    className: 'bg-amber-50 text-amber-700 border-amber-200',
-    dotColor: 'bg-amber-500',
-  },
-  IN_DEVELOPMENT: {
-    label: 'In Development',
-    className: 'bg-blue-50 text-blue-700 border-blue-200',
-    dotColor: 'bg-blue-500',
-  },
-  PUBLISHED: {
-    label: 'Published',
-    className: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    dotColor: 'bg-emerald-500',
-  },
-};
 
 export default function PostCard({ post }: PostCardProps) {
   const [isHovered, setIsHovered] = useState(false);
@@ -40,6 +23,8 @@ export default function PostCard({ post }: PostCardProps) {
     mouseX.set(event.clientX - rect.left);
     mouseY.set(event.clientY - rect.top);
   }
+
+  const status = getStatusConfig(post.status as StatusType);
 
   return (
     <motion.div
@@ -53,7 +38,7 @@ export default function PostCard({ post }: PostCardProps) {
       className="perspective-1000"
     >
       <Card
-        className="group relative h-full overflow-hidden border-border/60 hover:border-primary/30 bg-card/50 backdrop-blur-sm"
+        className="group relative h-full overflow-hidden border-border/60 hover:border-primary/30 bg-bg-card/50 backdrop-blur-sm"
         enableHover={false}
       >
         {/* Shimmer Effect */}
@@ -75,7 +60,7 @@ export default function PostCard({ post }: PostCardProps) {
         <motion.div
           className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           style={{
-            background: 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(16, 185, 129, 0.1) 0%, transparent 50%)',
+            background: 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), hsl(var(--primary) / 0.1) 0%, transparent 50%)',
           }}
         />
 
@@ -97,7 +82,7 @@ export default function PostCard({ post }: PostCardProps) {
               />
               {post.iconPath ? (
                 <img
-                  src={`http://localhost:5001${post.iconPath}`}
+                  src={`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}${post.iconPath}`}
                   alt={post.title}
                   className="relative w-16 h-16 object-cover rounded-2xl shadow-lg border-2 border-border/50 group-hover:border-primary/30 transition-colors"
                 />
@@ -113,10 +98,10 @@ export default function PostCard({ post }: PostCardProps) {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.05 }}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold border flex items-center gap-1.5 ${statusConfig[post.status].className}`}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold border flex items-center gap-1.5 ${status.className}`}
             >
-              <span className={`w-1.5 h-1.5 rounded-full ${statusConfig[post.status].dotColor} animate-pulse`} />
-              {statusConfig[post.status].label}
+              <span className={`w-1.5 h-1.5 rounded-full ${status.dotColor} animate-pulse`} />
+              {status.label}
             </motion.div>
           </div>
 
@@ -130,17 +115,17 @@ export default function PostCard({ post }: PostCardProps) {
                 {post.title}
               </motion.h3>
             </Link>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="flex items-center gap-2 text-xs text-fg-muted">
               <Calendar className="w-3.5 h-3.5" />
               <span>Updated {formatDistanceToNow(new Date(post.updatedAt), { addSuffix: true })}</span>
             </div>
           </div>
 
           {/* Description */}
-          <div className="flex-1 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+          <div className="flex-1 line-clamp-3 text-sm leading-relaxed text-fg-muted">
             <RichTextViewer
               content={post.summaryDescription}
-              className="prose-sm prose-p:text-muted-foreground prose-p:my-0"
+              className="prose-sm prose-p:text-fg-muted prose-p:my-0"
             />
           </div>
 
@@ -173,9 +158,10 @@ export default function PostCard({ post }: PostCardProps) {
           className="absolute inset-0 rounded-lg pointer-events-none"
           style={{
             background: isHovered
-              ? 'linear-gradient(45deg, var(--primary-500), var(--primary-600), var(--accent-mint), var(--primary-500))'
+              ? 'linear-gradient(45deg, hsl(var(--primary-500)), hsl(var(--primary-600)), hsl(var(--primary-500)), hsl(var(--primary-500)))'
               : 'transparent',
             backgroundSize: '300% 300%',
+            opacity: isHovered ? 0.1 : 0,
           }}
           animate={
             isHovered
@@ -185,7 +171,6 @@ export default function PostCard({ post }: PostCardProps) {
               : {}
           }
           transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-          style={{ opacity: isHovered ? 0.1 : 0 }}
         />
       </Card>
     </motion.div>
