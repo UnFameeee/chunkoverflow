@@ -392,7 +392,8 @@ export default function HomePage() {
         <section id="features" className="relative py-32 overflow-hidden">
           {/* Enhanced Background for Dark Mode */}
           <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-gradient-to-b from-bg-primary via-bg-secondary to-bg-primary dark:from-bg-primary dark:via-bg-secondary/50 dark:to-bg-primary" />
+            {/* Very long gradient for smooth transition */}
+            <div className="absolute inset-0 bg-gradient-to-b from-bg-primary via-bg-secondary/60 via-bg-secondary/40 via-bg-secondary/30 to-bg-primary dark:from-bg-primary dark:via-bg-secondary/30 dark:via-bg-secondary/20 dark:via-bg-secondary/15 dark:to-bg-primary" />
             <motion.div
               style={{ y: y1 }}
               className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 dark:bg-primary/15 rounded-full blur-[150px]"
