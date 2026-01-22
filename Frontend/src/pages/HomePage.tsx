@@ -220,27 +220,6 @@ export default function HomePage() {
               style={{ y: y1 }}
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[200px]"
             />
-
-            {/* Floating Particles */}
-            {!reduceMotion && [...Array(10)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-1 h-1 bg-primary/60 rounded-full"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-                animate={{
-                  y: [0, -30, 0],
-                  opacity: [0.2, 1, 0.2],
-                }}
-                transition={{
-                  duration: 3 + Math.random() * 2,
-                  repeat: Infinity,
-                  delay: Math.random() * 2,
-                }}
-              />
-            ))}
           </div>
 
           <div className="container mx-auto px-4 py-32 relative z-10">
@@ -255,7 +234,7 @@ export default function HomePage() {
                 <div className="relative group">
                   <div className="absolute -inset-1 bg-gradient-to-r from-primary to-primary/60 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000" />
                   <div className="relative inline-flex items-center gap-2 px-6 py-3 rounded-full bg-bg-secondary/80 backdrop-blur-xl border border-primary/30 text-primary text-sm font-medium">
-                    <Sparkles className="w-4 h-4 animate-pulse" />
+                    <Sparkles className="w-4 h-4" />
                     <span>Premium Developer Resources</span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -274,13 +253,6 @@ export default function HomePage() {
                   <span className="relative z-10 bg-gradient-to-r from-primary via-primary-hover to-primary bg-clip-text text-transparent">
                     Software Faster
                   </span>
-                  {!reduceMotion && (
-                    <motion.span
-                      className="absolute inset-0 bg-gradient-to-r from-primary via-primary-hover to-primary bg-clip-text text-transparent blur-xl"
-                      animate={{ opacity: [0.3, 0.6, 0.3] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    />
-                  )}
                 </span>
               </motion.h1>
 
@@ -376,14 +348,10 @@ export default function HomePage() {
               transition={{ delay: 1.5 }}
               className="absolute bottom-10 left-1/2 -translate-x-1/2"
             >
-              <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="flex flex-col items-center gap-2 text-fg-secondary"
-              >
+              <div className="flex flex-col items-center gap-2 text-fg-secondary">
                 <span className="text-sm">Scroll to explore</span>
                 <ChevronDown className="w-5 h-5" />
-              </motion.div>
+              </div>
             </motion.div>
           </div>
         </section>
@@ -533,7 +501,7 @@ export default function HomePage() {
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div
                     key={i}
-                    className="h-96 rounded-3xl bg-bg-secondary/50 border border-border animate-pulse"
+                    className="h-96 rounded-3xl bg-bg-secondary/50 border border-border"
                   />
                 ))}
               </div>

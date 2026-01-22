@@ -41,7 +41,12 @@ api.interceptors.response.use(
         });
 
         // NestJS returns {result: {accessToken, refreshToken}}
-        const { accessToken, refreshToken: newRefreshToken } = response.data.result;
+        const result = response.data.result;
+        if (!result?.accessToken || !result?.refreshToken) {
+          throw new Error('Invalid refresh response');
+        }
+
+        const { accessToken, refreshToken: newRefreshToken } = result;
 
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', newRefreshToken);

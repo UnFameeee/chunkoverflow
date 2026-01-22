@@ -6,7 +6,7 @@ import { Package, ArrowRight, Calendar, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import RichTextViewer from './RichTextViewer';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
 import { getStatusConfig, type StatusType } from '@/lib/statusColors';
 
 interface PostCardProps {
@@ -42,19 +42,21 @@ export default function PostCard({ post }: PostCardProps) {
         enableHover={false}
       >
         {/* Shimmer Effect */}
-        <motion.div
-          className="absolute inset-0 z-10 pointer-events-none"
-          style={{
-            background: isHovered
-              ? 'linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 60%, transparent 100%)'
-              : 'transparent',
-            backgroundSize: '200% 200%',
-          }}
-          animate={{
-            backgroundPosition: isHovered ? ['200% 0%', '-200% 0%'] : '0% 0%',
-          }}
-          transition={{ duration: 1.5, ease: 'linear' }}
-        />
+        <AnimatePresence>
+          {isHovered && (
+            <motion.div
+              className="absolute inset-0 z-10 pointer-events-none"
+              style={{
+                backgroundImage: 'linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 60%, transparent 100%)',
+                backgroundSize: '200% 200%',
+              }}
+              initial={{ backgroundPosition: '0% 0%' }}
+              animate={{ backgroundPosition: ['200% 0%', '-200% 0%'] }}
+              exit={{ backgroundPosition: '0% 0%' }}
+              transition={{ duration: 1.5, ease: 'linear' }}
+            />
+          )}
+        </AnimatePresence>
 
         {/* Glow Effect on Hover */}
         <motion.div
