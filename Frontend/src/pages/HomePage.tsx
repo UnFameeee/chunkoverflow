@@ -29,6 +29,7 @@ import {
   GitBranch,
   AlertCircle,
   RefreshCw,
+  CheckCircle,
   LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -58,7 +59,6 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const fetchPosts = useCallback(async () => {
     try {
@@ -123,50 +123,50 @@ export default function HomePage() {
     icon: LucideIcon;
     title: string;
     description: string;
-    gradient: string;
-    bgGlow: string;
+    textColor: string;
+    iconBg: string;
   }> = [
     {
       icon: Terminal,
       title: 'Clean Code',
-      description: 'Production-ready examples with best practices',
-      gradient: 'from-info to-info',
-      bgGlow: 'bg-info/20',
+      description: 'Production-ready examples following industry best practices and standards',
+      textColor: 'text-info',
+      iconBg: 'bg-info/10',
     },
     {
       icon: Zap,
       title: 'Lightning Fast',
-      description: 'Optimized for instant loading and response',
-      gradient: 'from-warning to-warning',
-      bgGlow: 'bg-warning/20',
+      description: 'Optimized for instant loading with sub-100ms response times',
+      textColor: 'text-warning',
+      iconBg: 'bg-warning/10',
     },
     {
       icon: Shield,
       title: 'Secure & Reliable',
-      description: 'Tested, verified, and enterprise-ready',
-      gradient: 'from-primary to-primary',
-      bgGlow: 'bg-primary/20',
+      description: 'Enterprise-grade security with comprehensive testing and verification',
+      textColor: 'text-primary',
+      iconBg: 'bg-primary/10',
     },
     {
       icon: Puzzle,
       title: 'Easy Integration',
-      description: 'Plug-and-play components for rapid dev',
-      gradient: 'from-purple-500 to-pink-500',
-      bgGlow: 'bg-purple-500/20',
+      description: 'Drop-in components that work seamlessly with your existing stack',
+      textColor: 'text-purple-500',
+      iconBg: 'bg-purple-500/10',
     },
     {
       icon: Database,
       title: 'Scalable Architecture',
-      description: 'Built to grow with your project',
-      gradient: 'from-rose-500 to-red-500',
-      bgGlow: 'bg-rose-500/20',
+      description: 'Built from the ground up to scale with your growing project needs',
+      textColor: 'text-rose-500',
+      iconBg: 'bg-rose-500/10',
     },
     {
       icon: Cloud,
       title: 'Cloud Native',
-      description: 'Ready for modern deployment pipelines',
-      gradient: 'from-sky-500 to-blue-500',
-      bgGlow: 'bg-sky-500/20',
+      description: 'Ready for modern deployment pipelines and containerized environments',
+      textColor: 'text-sky-500',
+      iconBg: 'bg-sky-500/10',
     },
   ];
 
@@ -390,34 +390,31 @@ export default function HomePage() {
 
         {/* Features Section */}
         <section id="features" className="relative py-32 overflow-hidden">
-          {/* Enhanced Background for Dark Mode */}
-          <div className="absolute inset-0">
-            {/* Very long gradient for smooth transition */}
-            <div className="absolute inset-0 bg-gradient-to-b from-bg-primary via-bg-secondary/60 via-bg-secondary/40 via-bg-secondary/30 to-bg-primary dark:from-bg-primary dark:via-bg-secondary/30 dark:via-bg-secondary/20 dark:via-bg-secondary/15 dark:to-bg-primary" />
-            <motion.div
-              style={{ y: y1 }}
-              className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 dark:bg-primary/15 rounded-full blur-[150px]"
-            />
-            <motion.div
-              style={{ y: y2 }}
-              className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent-mint/10 dark:bg-accent-mint/20 rounded-full blur-[150px]"
-            />
-          </div>
+          <div className="absolute inset-0 bg-bg-primary" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f03_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f03_1px,transparent_1px)] bg-[size:4rem_4rem] dark:opacity-50" />
 
           <div className="container mx-auto px-4 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-20"
+              className="text-center mb-16"
             >
-              <h2 className="text-5xl md:text-6xl font-bold mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10 text-primary text-sm font-medium mb-6">
+                <Sparkles className="w-4 h-4" />
+                <span>Why Developers Choose Us</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                 <span className="bg-gradient-to-r from-fg-primary via-fg-primary to-fg-secondary bg-clip-text text-transparent">
-                  Why Developers Love Us
+                  Built for Developers,
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent">
+                  by Developers
                 </span>
               </h2>
-              <p className="text-xl text-fg-secondary max-w-2xl mx-auto">
-                Everything you need to ship production-ready code faster
+              <p className="text-lg md:text-xl text-fg-secondary max-w-2xl mx-auto">
+                Everything you need to ship production-ready code, faster and with confidence
               </p>
             </motion.div>
 
@@ -426,37 +423,63 @@ export default function HomePage() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-7xl mx-auto"
             >
-              {features.map((feature) => (
+              {features.map((feature, index) => (
                 <motion.div
                   key={feature.title}
                   variants={itemVariants}
-                  onHoverStart={() => setHoveredCard(feature.title)}
-                  onHoverEnd={() => setHoveredCard(null)}
-                  className="relative group"
+                  className="relative group cursor-pointer"
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-r ${feature.gradient} rounded-3xl blur-xl opacity-0 group-hover:opacity-20 transition duration-500`} />
-                  <div className="relative h-full p-8 rounded-3xl bg-bg-secondary/50 backdrop-blur-xl border border-border hover:border-border transition-all duration-300">
-                    <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${feature.gradient} text-primary-fg mb-6 shadow-lg`}>
-                      <feature.icon className="w-8 h-8" />
+                  <div className="relative h-full p-6 rounded-2xl bg-bg-card border border-border hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
+                    <div className="flex items-start gap-4 mb-4">
+                      <div className={`flex-shrink-0 p-3 rounded-xl ${feature.iconBg} ${feature.textColor} group-hover:scale-110 transition-transform duration-300`}>
+                        <feature.icon className="w-6 h-6" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-fg-primary mb-2 group-hover:text-primary transition-colors">
+                          {feature.title}
+                        </h3>
+                      </div>
                     </div>
-                    <h3 className="text-2xl font-bold text-fg-primary mb-3">{feature.title}</h3>
-                    <p className="text-fg-secondary leading-relaxed">{feature.description}</p>
-
-                    <AnimatePresence>
-                      {hoveredCard === feature.title && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} rounded-3xl opacity-10 -z-10`}
-                        />
-                      )}
-                    </AnimatePresence>
+                    <p className="text-fg-secondary text-sm leading-relaxed">
+                      {feature.description}
+                    </p>
+                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <ArrowRight className={`w-5 h-5 ${feature.textColor}`} />
+                    </div>
                   </div>
                 </motion.div>
               ))}
+            </motion.div>
+
+            {/* Bottom CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mt-20 text-center"
+            >
+              <div className="inline-flex flex-wrap items-center justify-center gap-6 text-sm text-fg-secondary">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-primary" />
+                  <span>Open Source</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-primary" />
+                  <span>TypeScript First</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-primary" />
+                  <span>Community Driven</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-primary" />
+                  <span>Production Ready</span>
+                </div>
+              </div>
             </motion.div>
           </div>
         </section>

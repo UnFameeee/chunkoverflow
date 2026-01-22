@@ -23,29 +23,36 @@ async function main() {
 
   console.log('Created admin user:', admin);
 
-  // Create sample blocks
-  const blocks = [
+  // Create sample posts
+  const posts = [
     {
-      title: 'Sample Block 1',
-      slug: 'sample-block-1',
-      summaryDescription: 'This is a sample block for testing',
-      fullDescription: 'Full description of the sample block with more details.',
+      title: 'React Performance Optimization',
+      slug: 'react-performance-optimization',
+      summaryDescription: 'Learn how to optimize your React applications for better performance',
+      fullDescription: 'Comprehensive guide to React performance optimization techniques including memoization, code splitting, and lazy loading.',
       status: 'PUBLISHED' as const,
     },
     {
-      title: 'Sample Block 2',
-      slug: 'sample-block-2',
-      summaryDescription: 'Another sample block',
-      fullDescription: 'More detailed description for the second block.',
+      title: 'TypeScript Best Practices',
+      slug: 'typescript-best-practices',
+      summaryDescription: 'Essential TypeScript patterns for type-safe applications',
+      fullDescription: 'Explore TypeScript best practices for building scalable and maintainable applications.',
+      status: 'PUBLISHED' as const,
+    },
+    {
+      title: 'NestJS Architecture Patterns',
+      slug: 'nestjs-architecture-patterns',
+      summaryDescription: 'Building scalable backend applications with NestJS',
+      fullDescription: 'Deep dive into NestJS architecture patterns for enterprise-grade applications.',
       status: 'IN_DEVELOPMENT' as const,
     },
   ];
 
-  for (const block of blocks) {
-    await prisma.block.upsert({
-      where: { slug: block.slug },
+  for (const post of posts) {
+    await prisma.post.upsert({
+      where: { slug: post.slug },
       update: {},
-      create: block,
+      create: post,
     });
   }
 
