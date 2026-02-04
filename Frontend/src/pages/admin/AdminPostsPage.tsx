@@ -169,47 +169,6 @@ export default function AdminPostsPage() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Animated Decorative Background Elements */}
-      <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.05, 0.1, 0.05],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-        className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/5 to-transparent -z-10"
-      />
-      <motion.div
-        animate={{
-          x: [0, 50, 0],
-          y: [0, -30, 0],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-        className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10"
-      />
-      <motion.div
-        animate={{
-          x: [0, -40, 0],
-          y: [0, 30, 0],
-          scale: [1, 1.15, 1],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: 'easeInOut',
-          delay: 1,
-        }}
-        className="absolute top-[20%] left-[-5%] w-72 h-72 bg-accent-mint/10 rounded-full blur-3xl -z-10"
-      />
-
       {/* Header */}
       <motion.header
         className="bg-card/80 backdrop-blur-xl border-b border-border/60 sticky top-0 z-30 transition-all duration-200"
@@ -225,13 +184,9 @@ export default function AdminPostsPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
             >
-              <motion.div
-                className="bg-gradient-to-br from-primary to-primary-600 p-2.5 rounded-xl shadow-lg shadow-primary/20"
-                whileHover={{ scale: 1.05, rotate: [0, -5, 5, -5, 0] }}
-                transition={{ duration: 0.5 }}
-              >
+              <div className="bg-gradient-to-br from-primary to-primary-600 p-2.5 rounded-xl shadow-lg shadow-primary/20">
                 <LayoutDashboard className="h-5 w-5 text-primary-fg" />
-              </motion.div>
+              </div>
               <div>
                 <span className="text-lg font-bold tracking-tight block leading-none">Admin</span>
                 <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Dashboard</span>
@@ -249,10 +204,7 @@ export default function AdminPostsPage() {
                 className="flex items-center gap-3 text-sm bg-muted/50 px-4 py-2 rounded-full border border-border/50 shadow-sm"
                 whileHover={{ scale: 1.02 }}
               >
-                <div className="relative">
-                  <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-                  <div className="absolute inset-0 w-2 h-2 rounded-full bg-success animate-ping opacity-75" />
-                </div>
+                <div className="w-2 h-2 rounded-full bg-success" />
                 <span className="font-medium">{user?.username}</span>
               </motion.div>
               <div className="h-6 w-px bg-border" />
@@ -361,8 +313,6 @@ export default function AdminPostsPage() {
                 <CardTitle className="text-sm font-medium text-muted-foreground">Total Posts</CardTitle>
                 <motion.div
                   className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors"
-                  whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }}
-                  transition={{ duration: 0.5 }}
                 >
                   <Package className="h-4 w-4 text-primary" />
                 </motion.div>
@@ -453,18 +403,7 @@ export default function AdminPostsPage() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Link to="/admin/posts/create">
               <Button className="w-full md:w-auto gap-2 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 h-11 px-6 rounded-full bg-gradient-to-r from-primary to-primary-600 hover:from-primary-600 hover:to-primary-700 border-0 relative overflow-hidden">
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/20 to-primary/0"
-                  animate={{
-                    translateX: ['-100%', '100%'],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatDelay: 3,
-                    ease: 'linear',
-                  }}
-                />
+                <motion.div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/20 to-primary/0" />
                 <Plus className="w-5 h-5 relative z-10" />
                 <span className="relative z-10">Create New Post</span>
               </Button>
@@ -483,16 +422,7 @@ export default function AdminPostsPage() {
                 className="relative w-full md:w-96 group"
                 whileFocus={{ scale: 1.02 }}
               >
-                <motion.div
-                  animate={{
-                    scale: [1, 1.1, 1],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatDelay: 3,
-                  }}
-                >
+                <motion.div>
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 </motion.div>
                 <Input
@@ -536,34 +466,13 @@ export default function AdminPostsPage() {
                     exit={{ opacity: 0 }}
                   >
                     <div className="relative inline-block">
-                      <motion.div
-                        className="absolute inset-0 bg-primary/20 rounded-full blur-xl"
-                        animate={{
-                          scale: [1, 1.2, 1],
-                          opacity: [0.3, 0.6, 0.3],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                        }}
-                      />
                       <div className="relative bg-card p-4 rounded-full shadow-lg">
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-                        >
-                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        </motion.div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                       </div>
                     </div>
-                    <motion.p
-                      className="mt-6 text-muted-foreground font-medium"
-                      animate={{ opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
+                    <p className="mt-6 text-muted-foreground font-medium">
                       Loading your content...
-                    </motion.p>
+                    </p>
                   </motion.div>
                 ) : filteredPosts.length === 0 ? (
                   <motion.div
@@ -671,10 +580,8 @@ export default function AdminPostsPage() {
                                     variant={getStatusConfig(post.status as StatusType).badgeVariant}
                                     className="gap-2 pl-2 pr-3 py-1.5 rounded-full border-0 shadow-sm ring-1 ring-inset"
                                   >
-                                    <motion.span
+                                    <span
                                       className={`w-1.5 h-1.5 rounded-full ${getStatusDotColor(post.status as StatusType)}`}
-                                      animate={{ scale: [1, 1.2, 1] }}
-                                      transition={{ duration: 2, repeat: Infinity }}
                                     />
                                     {getStatusLabel(post.status as StatusType)}
                                   </Badge>

@@ -117,7 +117,6 @@ export default function PostFormPage() {
             }}
             transition={{
               duration: 6,
-              repeat: Infinity,
               ease: 'easeInOut',
             }}
             className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-3xl"
@@ -129,7 +128,6 @@ export default function PostFormPage() {
             }}
             transition={{
               duration: 8,
-              repeat: Infinity,
               ease: 'easeInOut',
               delay: 1,
             }}
@@ -154,26 +152,20 @@ export default function PostFormPage() {
                 }}
                 transition={{
                   duration: 2,
-                  repeat: Infinity,
                   ease: 'easeInOut',
                 }}
               />
               <div className="relative bg-card p-4 rounded-full shadow-lg mb-4 inline-block">
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
                 >
                   <Loader2 className="w-8 h-8 text-primary" />
                 </motion.div>
               </div>
             </div>
-            <motion.p
-              className="text-muted-foreground font-medium"
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
+            <p className="text-muted-foreground font-medium">
               Loading post details...
-            </motion.p>
+            </p>
           </motion.div>
         </div>
       </div>
@@ -213,7 +205,6 @@ export default function PostFormPage() {
         }}
         transition={{
           duration: 8,
-          repeat: Infinity,
           ease: 'easeInOut',
         }}
         className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/5 to-transparent -z-10"
@@ -226,7 +217,6 @@ export default function PostFormPage() {
         }}
         transition={{
           duration: 12,
-          repeat: Infinity,
           ease: 'easeInOut',
         }}
         className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10"
@@ -239,7 +229,6 @@ export default function PostFormPage() {
         }}
         transition={{
           duration: 10,
-          repeat: Infinity,
           ease: 'easeInOut',
           delay: 1,
         }}
@@ -280,7 +269,6 @@ export default function PostFormPage() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
                       ease: 'easeInOut',
                     }}
                   >
@@ -290,7 +278,6 @@ export default function PostFormPage() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
                         repeatDelay: 1,
                       }}
                     >
@@ -368,7 +355,6 @@ export default function PostFormPage() {
                   }}
                   transition={{
                     duration: 0.5,
-                    repeat: Infinity,
                   }}
                 >
                   <AlertCircle className="w-5 h-5 shrink-0" />
@@ -543,7 +529,6 @@ export default function PostFormPage() {
                               }}
                               transition={{
                                 duration: 2,
-                                repeat: Infinity,
                               }}
                             >
                               {formData.status === 'PUBLISHED' && '🟢'}
@@ -569,7 +554,6 @@ export default function PostFormPage() {
                         }}
                         transition={{
                           duration: 4,
-                          repeat: Infinity,
                           ease: 'easeInOut',
                         }}
                       >
@@ -588,7 +572,6 @@ export default function PostFormPage() {
                           }}
                           transition={{
                             duration: 2,
-                            repeat: Infinity,
                             repeatDelay: 1,
                           }}
                         >
@@ -620,7 +603,6 @@ export default function PostFormPage() {
                         }}
                         transition={{
                           duration: 2,
-                          repeat: Infinity,
                           ease: 'easeInOut',
                         }}
                       >
@@ -670,7 +652,6 @@ export default function PostFormPage() {
                               }}
                               transition={{
                                 duration: 2,
-                                repeat: Infinity,
                               }}
                             />
                             <motion.div
@@ -680,7 +661,6 @@ export default function PostFormPage() {
                               }}
                               transition={{
                                 duration: 2,
-                                repeat: Infinity,
                               }}
                             >
                               <Sparkles className="w-3 h-3 text-primary-fg" />
@@ -720,7 +700,6 @@ export default function PostFormPage() {
                               }}
                               transition={{
                                 duration: 2,
-                                repeat: Infinity,
                                 ease: 'easeInOut',
                               }}
                             >

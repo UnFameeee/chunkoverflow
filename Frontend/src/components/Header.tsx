@@ -8,7 +8,13 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  // Initialize dark mode from localStorage or system preference to prevent hydration mismatch
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const stored = localStorage.getItem('darkMode');
+    if (stored !== null) return stored === 'true';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
   const { isAuthenticated, logout } = useAuthStore();
   const navigate = useNavigate();
 
@@ -22,35 +28,21 @@ export default function Header() {
     return () => unsubscribe();
   }, [scrollY]);
 
-  // Initialize dark mode from localStorage or system preference
+  // Sync dark mode class to DOM
   useEffect(() => {
-    const stored = localStorage.getItem('darkMode');
-    if (stored !== null) {
-      setIsDark(stored === 'true');
-      if (stored === 'true') {
-        document.documentElement.classList.add('dark');
-      }
+    const root = document.documentElement;
+    if (isDark) {
+      root.classList.add('dark');
     } else {
-      // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setIsDark(prefersDark);
-      if (prefersDark) {
-        document.documentElement.classList.add('dark');
-      }
+      root.classList.remove('dark');
     }
-  }, []);
+  }, [isDark]);
 
   // Sync dark mode across browser tabs
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'darkMode' && e.newValue !== null) {
-        const newDarkMode = e.newValue === 'true';
-        setIsDark(newDarkMode);
-        if (newDarkMode) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
+        setIsDark(e.newValue === 'true');
       }
     };
 
@@ -62,11 +54,6 @@ export default function Header() {
     const newMode = !isDark;
     setIsDark(newMode);
     localStorage.setItem('darkMode', String(newMode));
-    if (newMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
   };
 
   const handleLogout = () => {
@@ -208,6 +195,9 @@ export default function Header() {
                     size="sm"
                     onClick={toggleDarkMode}
                     className="gap-2 relative overflow-hidden group"
+                    aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                    aria-pressed={isDark}
+                    role="switch"
                   >
                     <motion.div
                       className="absolute inset-0 bg-primary/10"
@@ -394,6 +384,9 @@ export default function Header() {
                         toggleDarkMode();
                       }}
                       className="flex items-center justify-between py-3 text-lg font-medium group w-full text-left"
+                      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                      aria-pressed={isDark}
+                      role="switch"
                     >
                       <span className="flex items-center gap-2">
                         <AnimatePresence mode="wait">

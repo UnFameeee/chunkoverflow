@@ -37,13 +37,15 @@ export default function LoginPage() {
 
     try {
       const response = await authService.login(username, password);
-      if (response.success && response.data) {
+      if (response.result) {
         login(
-          response.data.accessToken,
-          response.data.refreshToken,
-          response.data.user
+          response.result.accessToken,
+          response.result.refreshToken,
+          response.result.user
         );
         navigate('/admin/posts');
+      } else {
+        setError('Invalid response from server');
       }
     } catch (err: unknown) {
       setError((err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Login failed. Please check your credentials.');
