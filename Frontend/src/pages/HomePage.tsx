@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postService } from '@/services/postService';
 import { Post } from '@/types';
@@ -12,8 +12,6 @@ import {
   ArrowRight,
   Code,
   Zap,
-  Users,
-  TrendingUp,
   Play,
   Star,
   ChevronRight,
@@ -21,6 +19,7 @@ import {
   Rocket,
   Shield,
   ChevronDown,
+  ChevronUp,
   Database,
   Cloud,
   Puzzle,
@@ -29,6 +28,10 @@ import {
   GitBranch,
   AlertCircle,
   RefreshCw,
+  HelpCircle,
+  Eye,
+  Copy,
+  CheckCircle2,
   LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -50,6 +53,45 @@ function useReducedMotion() {
   return shouldReduce;
 }
 
+// FAQ data
+const faqs = [
+  {
+    question: 'How do I search for code snippets?',
+    answer: 'Use the search bar at the top of the page to find resources by title, description, or technology. Results update instantly as you type.',
+  },
+  {
+    question: 'Can I contribute my own snippets?',
+    answer: 'Currently, content is curated by our team. We\'re working on a contribution system that will allow developers to submit their own snippets.',
+  },
+  {
+    question: 'Are these snippets production-ready?',
+    answer: 'Yes! All snippets are reviewed and tested before being published. They follow best practices and are suitable for production use.',
+  },
+  {
+    question: 'How often is new content added?',
+    answer: 'We add new content regularly based on modern development needs and community requests. Check back often for updates!',
+  },
+];
+
+// How It Works steps
+const steps = [
+  {
+    icon: Search,
+    title: 'Discover',
+    description: 'Search through our curated collection of code snippets and resources',
+  },
+  {
+    icon: Eye,
+    title: 'Review',
+    description: 'Read detailed descriptions and see full implementation examples',
+  },
+  {
+    icon: Copy,
+    title: 'Implement',
+    description: 'Copy the code and integrate it into your project',
+  },
+];
+
 export default function HomePage() {
   const navigate = useNavigate();
   const reduceMotion = useReducedMotion();
@@ -59,6 +101,7 @@ export default function HomePage() {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const fetchPosts = useCallback(async () => {
     try {
@@ -170,12 +213,6 @@ export default function HomePage() {
     },
   ];
 
-  const stats: Array<{ icon: LucideIcon; label: string; value: string; color: string }> = [
-    { icon: Code, label: 'Code Snippets', value: `${posts.length}+`, color: 'text-info' },
-    { icon: Users, label: 'Active Users', value: '1K+', color: 'text-primary' },
-    { icon: Zap, label: 'Instant Load', value: '<100ms', color: 'text-warning' },
-    { icon: TrendingUp, label: 'Growth Rate', value: 'Daily', color: 'text-purple-500' },
-  ];
 
   // Navigation handlers
   const handleGetStarted = useCallback(() => {
@@ -194,6 +231,66 @@ export default function HomePage() {
   const handleExploreAll = useCallback(() => {
     navigate('/posts');
   }, [navigate]);
+
+  // Extract popular tags from real posts
+  const popularTags = useMemo(() => {
+    const tagCounts = new Map<string, number>();
+
+    posts.forEach((post) => {
+      // Extract words from title and description
+      const text = `${post.title} ${post.summaryDescription}`.toLowerCase();
+      const words = text.match(/\b(react|vue|angular|typescript|javascript|node|nestjs|nextjs|prisma|mongodb|postgresql|css|html|tailwind|api|graphql|rest|docker|aws|git|github)\b/g) || [];
+      words.forEach((word) => {
+        tagCounts.set(word, (tagCounts.get(word) || 0) + 1);
+      });
+    });
+
+    return Array.from(tagCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+      .map(([tag]) => tag.charAt(0).toUpperCase() + tag.slice(1));
+  }, [posts]);
+
+  // Calculate real stats
+  const stats = useMemo(() => {
+    const publishedCount = posts.filter((p) => p.status === 'PUBLISHED').length;
+
+    // Get last updated date from newest post
+    const lastUpdated = posts.length > 0
+      ? new Date(Math.max(...posts.map((p) => new Date(p.updatedAt).getTime())))
+      : null;
+
+    const daysSinceUpdate = lastUpdated
+      ? Math.floor((Date.now() - lastUpdated.getTime()) / (1000 * 60 * 60 * 24))
+      : null;
+
+    return [
+      {
+        icon: Code,
+        label: 'Total Resources',
+        value: `${posts.length}`,
+        color: 'text-info',
+      },
+      {
+        icon: CheckCircle2,
+        label: 'Published',
+        value: `${publishedCount}`,
+        color: 'text-primary',
+      },
+      {
+        icon: RefreshCw,
+        label: 'Last Updated',
+        value: daysSinceUpdate !== null ? `${daysSinceUpdate}d ago` : 'Recently',
+        color: 'text-warning',
+      },
+      {
+        icon: Star,
+        label: 'Quality',
+        value: 'Curated',
+        color: 'text-purple-500',
+      },
+    ];
+  }, [posts]);
 
   return (
     <div className="min-h-screen flex flex-col bg-bg-primary text-fg-primary overflow-hidden">
@@ -301,7 +398,7 @@ export default function HomePage() {
                     <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-fg-secondary" />
                     <Input
                       type="search"
-                      placeholder="Search 500+ resources..."
+                      placeholder="Search resources..."
                       className="flex-1 border-0 focus-visible:ring-0 bg-transparent text-fg-primary placeholder:text-fg-disabled pl-16 pr-4 h-16 text-lg"
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
@@ -311,18 +408,20 @@ export default function HomePage() {
                     </Button>
                   </div>
                 </div>
-                <div className="flex items-center justify-center gap-4 mt-4 text-sm text-fg-secondary">
-                  <span>Popular:</span>
-                  {['React', 'TypeScript', 'Node.js', 'Prisma'].map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => setSearch(tag)}
-                      className="px-3 py-1 rounded-full bg-bg-tertiary hover:bg-primary/20 hover:text-primary transition-colors"
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                </div>
+                {popularTags.length > 0 && (
+                  <div className="flex items-center justify-center gap-4 mt-4 text-sm text-fg-secondary flex-wrap">
+                    <span>Popular:</span>
+                    {popularTags.map((tag) => (
+                      <button
+                        key={tag}
+                        onClick={() => setSearch(tag)}
+                        className="px-3 py-1 rounded-full bg-bg-tertiary hover:bg-primary/20 hover:text-primary transition-colors"
+                      >
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </motion.div>
 
               {/* CTA Buttons */}
@@ -460,6 +559,69 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* How It Works Section */}
+        <section className="relative py-32 overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 bg-gradient-to-b from-bg-primary via-bg-secondary to-bg-primary" />
+            <motion.div
+              style={{ y: y2 }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent-mint/10 rounded-full blur-[200px]"
+            />
+          </div>
+
+          <div className="container mx-auto px-4 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-20"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-mint/10 border border-accent-mint/20 text-accent-mint text-sm font-medium mb-6">
+                <Zap className="w-4 h-4" />
+                <span>Simple Process</span>
+              </div>
+              <h2 className="text-5xl md:text-6xl font-bold mb-6">
+                <span className="bg-gradient-to-r from-fg-primary via-fg-primary to-fg-secondary bg-clip-text text-transparent">
+                  How It Works
+                </span>
+              </h2>
+              <p className="text-xl text-fg-secondary max-w-2xl mx-auto">
+                Get started in three simple steps
+              </p>
+            </motion.div>
+
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+            >
+              {steps.map((step, index) => (
+                <motion.div
+                  key={step.title}
+                  variants={itemVariants}
+                  className="relative"
+                >
+                  {index < steps.length - 1 && (
+                    <div className="hidden md:block absolute top-16 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-primary/30 to-transparent" />
+                  )}
+                  <div className="relative p-8 rounded-3xl bg-bg-secondary/50 backdrop-blur-xl border border-border hover:border-border transition-all duration-300 h-full">
+                    <div className="relative z-10">
+                      <div className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-primary to-primary-hover text-primary-fg mb-6 shadow-lg">
+                        <step.icon className="w-8 h-8" />
+                      </div>
+                      <div className="text-sm font-semibold text-primary mb-3">Step {index + 1}</div>
+                      <h3 className="text-2xl font-bold text-fg-primary mb-3">{step.title}</h3>
+                      <p className="text-fg-secondary leading-relaxed">{step.description}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
         {/* Featured Posts */}
         <section className="relative py-32 overflow-hidden">
           {/* Enhanced Background for Dark Mode */}
@@ -551,6 +713,82 @@ export default function HomePage() {
                 ))}
               </motion.div>
             )}
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="relative py-32 overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 bg-gradient-to-b from-bg-primary via-bg-secondary to-bg-primary" />
+            <motion.div
+              style={{ y: y1 }}
+              className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[150px]"
+            />
+          </div>
+
+          <div className="container mx-auto px-4 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6">
+                <HelpCircle className="w-4 h-4" />
+                <span>FAQ</span>
+              </div>
+              <h2 className="text-5xl md:text-6xl font-bold mb-6">
+                <span className="bg-gradient-to-r from-fg-primary via-fg-primary to-fg-secondary bg-clip-text text-transparent">
+                  Frequently Asked Questions
+                </span>
+              </h2>
+              <p className="text-xl text-fg-secondary max-w-2xl mx-auto">
+                Everything you need to know about Chunkoverflow
+              </p>
+            </motion.div>
+
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="max-w-3xl mx-auto space-y-4"
+            >
+              {faqs.map((faq, index) => (
+                <motion.div
+                  key={index}
+                  variants={itemVariants}
+                  className="rounded-2xl bg-bg-secondary/50 backdrop-blur-xl border border-border overflow-hidden"
+                >
+                  <button
+                    onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
+                    className="w-full p-6 flex items-center justify-between text-left hover:bg-bg-tertiary/50 transition-colors"
+                  >
+                    <h3 className="text-lg font-semibold text-fg-primary pr-8">{faq.question}</h3>
+                    {expandedFaq === index ? (
+                      <ChevronUp className="w-5 h-5 text-primary flex-shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-primary flex-shrink-0" />
+                    )}
+                  </button>
+                  <AnimatePresence>
+                    {expandedFaq === index && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-6 pb-6 pt-0">
+                          <p className="text-fg-secondary leading-relaxed">{faq.answer}</p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
         </section>
 

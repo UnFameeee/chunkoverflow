@@ -179,6 +179,26 @@
   body {
     @apply bg-bg-primary text-fg-primary antialiased;
   }
+
+  /* Remove ALL focus styles globally */
+  *:focus,
+  *:focus-visible,
+  *:focus-within {
+    outline: none !important;
+    box-shadow: none !important;
+    ring: none !important;
+    ring-offset: none !important;
+  }
+
+  /* Remove focus ring from all interactive elements */
+  button:focus,
+  input:focus,
+  textarea:focus,
+  select:focus,
+  a:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
 }
 
 /* Smooth Scrolling */
@@ -202,6 +222,24 @@ html {
 }
 
 /* TipTap Editor Styles */
+
+/* Remove ALL focus visual indicators - force override */
+@layer utilities {
+  .focus\:ring-0:focus {
+    --tw-ring-opacity: 0 !important;
+  }
+  .focus\:ring\:0:focus {
+    --tw-ring-opacity: 0 !important;
+  }
+  .focus\:ring:focus,
+  .focus\:ring-offset:focus,
+  .focus-visible\:ring:focus-visible {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+}
+
+
 .ProseMirror {
   outline: none;
 }
