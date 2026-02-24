@@ -72,8 +72,10 @@ export const translations = {
     'featured.exploreAll': 'View All',
     'featured.error.title': 'Unable to Load Tools',
     'featured.error.retry': 'Try Again',
-    'featured.empty.title': 'No tools found',
-    'featured.empty.description': 'Try different keywords or view all categories',
+    'featured.empty.title': 'Coming Soon',
+    'featured.empty.description': 'No tools available yet. New tools will be added soon. Stay tuned!',
+    'featured.notools.title': 'Coming Soon',
+    'featured.notools.description': 'I\'m currently working on adding useful tools. Check back soon for updates!',
     
     // FAQ
     'faq.badge': 'FAQ',
@@ -85,9 +87,6 @@ export const translations = {
     
     'faq.production.question': 'Are these tools production-ready?',
     'faq.production.answer': 'Yes! All tools are thoroughly tested before being shared. They follow best practices and are suitable for production environments.',
-    
-    'faq.free.question': 'Can I use them for free?',
-    'faq.free.answer': 'Absolutely free! All tools shared here can be used freely for your projects.',
     
     'faq.updates.question': 'How often are new tools added?',
     'faq.updates.answer': 'I regularly update with new tools based on modern development needs. Visit often to stay updated!',
@@ -168,8 +167,10 @@ export const translations = {
     'featured.exploreAll': 'Xem Tất Cả',
     'featured.error.title': 'Không Thể Tải Tool',
     'featured.error.retry': 'Thử Lại',
-    'featured.empty.title': 'Không tìm thấy tool nào',
-    'featured.empty.description': 'Thử từ khóa khác hoặc xem tất cả danh mục',
+    'featured.empty.title': 'Sắp Ra Mắt',
+    'featured.empty.description': 'Hiện chưa có tool nào. Các tool mới sẽ được cập nhật sớm. Hãy theo dõi!',
+    'featured.notools.title': 'Sắp Ra Mắt',
+    'featured.notools.description': 'Tôi đang chuẩn bị thêm các tool hữu ích. Hãy quay lại sau để cập nhật!',
     
     // FAQ
     'faq.badge': 'FAQ',
@@ -181,9 +182,6 @@ export const translations = {
     
     'faq.production.question': 'Các tool này có sẵn sàng cho production không?',
     'faq.production.answer': 'Có! Tất cả các tool đều được kiểm tra và test kỹ lưỡng trước khi chia sẻ. Chúng tuân theo best practices và phù hợp để sử dụng trong môi trường production.',
-    
-    'faq.free.question': 'Tôi có thể sử dụng miễn phí không?',
-    'faq.free.answer': 'Hoàn toàn miễn phí! Tất cả các tool được chia sẻ tại đây đều có thể sử dụng tự do cho các dự án của bạn.',
     
     'faq.updates.question': 'Bao lâu thì có tool mới?',
     'faq.updates.answer': 'Tôi thường xuyên cập nhật các tool mới dựa trên nhu cầu phát triển hiện đại. Hãy ghé thăm thường xuyên để không bỏ lỡ!',

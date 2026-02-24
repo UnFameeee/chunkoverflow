@@ -79,30 +79,8 @@ export default function HomePage() {
       answer: t('faq.production.answer'),
     },
     {
-      question: t('faq.free.question'),
-      answer: t('faq.free.answer'),
-    },
-    {
       question: t('faq.updates.question'),
       answer: t('faq.updates.answer'),
-    },
-  ], [t]);
-
-  const steps = useMemo(() => [
-    {
-      icon: Search,
-      title: t('howItWorks.discover.title'),
-      description: t('howItWorks.discover.description'),
-    },
-    {
-      icon: Eye,
-      title: t('howItWorks.review.title'),
-      description: t('howItWorks.review.description'),
-    },
-    {
-      icon: Copy,
-      title: t('howItWorks.implement.title'),
-      description: t('howItWorks.implement.description'),
     },
   ], [t]);
 
@@ -117,9 +95,15 @@ export default function HomePage() {
         pageSize: 100,
       });
       setPosts(response.result || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching posts:', error);
-      setError('Failed to load resources. Please try again.');
+      // Chỉ set error nếu không phải lỗi 404 hoặc empty response
+      if (error?.response?.status !== 404) {
+        setError('Failed to load resources. Please try again.');
+      } else {
+        // Nếu là 404, chỉ set posts rỗng, không hiển thị error
+        setPosts([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -287,7 +271,7 @@ export default function HomePage() {
         color: 'text-purple-500',
       },
     ];
-  }, [posts]);
+  }, [posts, t]);
 
   return (
     <div className="min-h-screen flex flex-col bg-bg-primary text-fg-primary overflow-hidden">
@@ -547,69 +531,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* How It Works Section */}
-        <section className="relative py-32 overflow-hidden">
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-gradient-to-b from-bg-primary via-bg-secondary to-bg-primary" />
-            <motion.div
-              style={{ y: y2 }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent-mint/10 rounded-full blur-[200px]"
-            />
-          </div>
-
-          <div className="container mx-auto px-4 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-20"
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-mint/10 border border-accent-mint/20 text-accent-mint text-sm font-medium mb-6">
-                <Zap className="w-4 h-4" />
-                <span>{t('howItWorks.badge')}</span>
-              </div>
-              <h2 className="text-5xl md:text-6xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-fg-primary via-fg-primary to-fg-secondary bg-clip-text text-transparent">
-                  {t('howItWorks.title')}
-                </span>
-              </h2>
-              <p className="text-xl text-fg-secondary max-w-2xl mx-auto">
-                {t('howItWorks.description')}
-              </p>
-            </motion.div>
-
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
-            >
-              {steps.map((step, index) => (
-                <motion.div
-                  key={step.title}
-                  variants={itemVariants}
-                  className="relative"
-                >
-                  {index < steps.length - 1 && (
-                    <div className="hidden md:block absolute top-16 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-primary/30 to-transparent" />
-                  )}
-                  <div className="relative p-8 rounded-3xl bg-bg-secondary/50 backdrop-blur-xl border border-border hover:border-border transition-all duration-300 h-full">
-                    <div className="relative z-10">
-                      <div className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-primary to-primary-hover text-primary-fg mb-6 shadow-lg">
-                        <step.icon className="w-8 h-8" />
-                      </div>
-                      <div className="text-sm font-semibold text-primary mb-3">{t('howItWorks.step')} {index + 1}</div>
-                      <h3 className="text-2xl font-bold text-fg-primary mb-3">{step.title}</h3>
-                      <p className="text-fg-secondary leading-relaxed">{step.description}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
         {/* Featured Posts */}
         <section className="relative py-32 overflow-hidden">
           {/* Enhanced Background for Dark Mode */}
@@ -680,11 +601,11 @@ export default function HomePage() {
               </div>
             ) : posts.length === 0 ? (
               <div className="text-center py-20">
-                <div className="inline-flex p-4 rounded-full bg-bg-secondary border border-border mb-6">
-                  <Search className="w-12 h-12 text-fg-secondary" />
+                <div className="inline-flex p-4 rounded-full bg-primary/10 border border-primary/20 mb-6">
+                  <Sparkles className="w-12 h-12 text-primary" />
                 </div>
-                <h3 className="text-3xl font-bold text-fg-primary mb-3">{t('featured.empty.title')}</h3>
-                <p className="text-fg-secondary text-lg">{t('featured.empty.description')}</p>
+                <h3 className="text-3xl font-bold text-fg-primary mb-3">{search ? t('featured.empty.title') : t('featured.notools.title')}</h3>
+                <p className="text-fg-secondary text-lg">{search ? t('featured.empty.description') : t('featured.notools.description')}</p>
               </div>
             ) : (
               <motion.div

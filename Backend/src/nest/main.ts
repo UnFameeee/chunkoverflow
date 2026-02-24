@@ -12,8 +12,17 @@ async function bootstrap() {
   });
 
   // Enable CORS
+  const allowedOrigins = [
+    'http://localhost:5002',
+    'http://localhost:5003',
+    'http://localhost:5173',
+  ];
+  if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(process.env.FRONTEND_URL);
+  }
+  
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: allowedOrigins,
     credentials: true,
   });
 
