@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { postService } from '@/services/postService';
 import { Post } from '@/types';
 import PostCard from '@/components/PostCard';
@@ -54,48 +55,12 @@ function useReducedMotion() {
   return shouldReduce;
 }
 
-// FAQ data
-const faqs = [
-  {
-    question: 'How do I search for code snippets?',
-    answer: 'Use the search bar at the top of the page to find resources by title, description, or technology. Results update instantly as you type.',
-  },
-  {
-    question: 'Can I contribute my own snippets?',
-    answer: 'Currently, content is curated by our team. We\'re working on a contribution system that will allow developers to submit their own snippets.',
-  },
-  {
-    question: 'Are these snippets production-ready?',
-    answer: 'Yes! All snippets are reviewed and tested before being published. They follow best practices and are suitable for production use.',
-  },
-  {
-    question: 'How often is new content added?',
-    answer: 'We add new content regularly based on modern development needs and community requests. Check back often for updates!',
-  },
-];
 
-// How It Works steps
-const steps = [
-  {
-    icon: Search,
-    title: 'Discover',
-    description: 'Search through our curated collection of code snippets and resources',
-  },
-  {
-    icon: Eye,
-    title: 'Review',
-    description: 'Read detailed descriptions and see full implementation examples',
-  },
-  {
-    icon: Copy,
-    title: 'Implement',
-    description: 'Copy the code and integrate it into your project',
-  },
-];
 
 export default function HomePage() {
   const navigate = useNavigate();
   const reduceMotion = useReducedMotion();
+  const { t } = useLanguage();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -103,6 +68,43 @@ export default function HomePage() {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+
+  const faqs = useMemo(() => [
+    {
+      question: t('faq.search.question'),
+      answer: t('faq.search.answer'),
+    },
+    {
+      question: t('faq.production.question'),
+      answer: t('faq.production.answer'),
+    },
+    {
+      question: t('faq.free.question'),
+      answer: t('faq.free.answer'),
+    },
+    {
+      question: t('faq.updates.question'),
+      answer: t('faq.updates.answer'),
+    },
+  ], [t]);
+
+  const steps = useMemo(() => [
+    {
+      icon: Search,
+      title: t('howItWorks.discover.title'),
+      description: t('howItWorks.discover.description'),
+    },
+    {
+      icon: Eye,
+      title: t('howItWorks.review.title'),
+      description: t('howItWorks.review.description'),
+    },
+    {
+      icon: Copy,
+      title: t('howItWorks.implement.title'),
+      description: t('howItWorks.implement.description'),
+    },
+  ], [t]);
 
   const fetchPosts = useCallback(async () => {
     try {
@@ -163,56 +165,50 @@ export default function HomePage() {
     },
   };
 
-  const features: Array<{
-    icon: LucideIcon;
-    title: string;
-    description: string;
-    textColor: string;
-    iconBg: string;
-  }> = [
+  const features = useMemo(() => [
     {
       icon: Terminal,
-      title: 'Clean Code',
-      description: 'Production-ready examples following industry best practices and standards',
+      title: t('features.cleanCode.title'),
+      description: t('features.cleanCode.description'),
       textColor: 'text-info',
       iconBg: 'bg-info/10',
     },
     {
       icon: Zap,
-      title: 'Lightning Fast',
-      description: 'Optimized for instant loading with sub-100ms response times',
+      title: t('features.fast.title'),
+      description: t('features.fast.description'),
       textColor: 'text-warning',
       iconBg: 'bg-warning/10',
     },
     {
       icon: Shield,
-      title: 'Secure & Reliable',
-      description: 'Enterprise-grade security with comprehensive testing and verification',
+      title: t('features.secure.title'),
+      description: t('features.secure.description'),
       textColor: 'text-primary',
       iconBg: 'bg-primary/10',
     },
     {
       icon: Puzzle,
-      title: 'Easy Integration',
-      description: 'Drop-in components that work seamlessly with your existing stack',
+      title: t('features.integration.title'),
+      description: t('features.integration.description'),
       textColor: 'text-purple-500',
       iconBg: 'bg-purple-500/10',
     },
     {
       icon: Database,
-      title: 'Scalable Architecture',
-      description: 'Built from the ground up to scale with your growing project needs',
+      title: t('features.scalable.title'),
+      description: t('features.scalable.description'),
       textColor: 'text-rose-500',
       iconBg: 'bg-rose-500/10',
     },
     {
       icon: Cloud,
-      title: 'Cloud Native',
-      description: 'Ready for modern deployment pipelines and containerized environments',
+      title: t('features.cloud.title'),
+      description: t('features.cloud.description'),
       textColor: 'text-sky-500',
       iconBg: 'bg-sky-500/10',
     },
-  ];
+  ], [t]);
 
 
   // Navigation handlers
@@ -268,26 +264,26 @@ export default function HomePage() {
     return [
       {
         icon: Code,
-        label: 'Total Resources',
+        label: t('stats.totalTools'),
         value: `${posts.length}`,
         color: 'text-info',
       },
       {
         icon: CheckCircle2,
-        label: 'Published',
+        label: t('stats.published'),
         value: `${publishedCount}`,
         color: 'text-primary',
       },
       {
         icon: RefreshCw,
-        label: 'Last Updated',
-        value: daysSinceUpdate !== null ? `${daysSinceUpdate}d ago` : 'Recently',
+        label: t('stats.updated'),
+        value: daysSinceUpdate !== null ? `${daysSinceUpdate} ${t('stats.daysAgo')}` : t('stats.recently'),
         color: 'text-warning',
       },
       {
         icon: Star,
-        label: 'Quality',
-        value: 'Curated',
+        label: t('stats.quality'),
+        value: t('stats.high'),
         color: 'text-purple-500',
       },
     ];
@@ -333,7 +329,7 @@ export default function HomePage() {
                   <div className="absolute -inset-1 bg-gradient-to-r from-primary to-primary/60 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000" />
                   <div className="relative inline-flex items-center gap-2 px-6 py-3 rounded-full bg-bg-secondary/80 backdrop-blur-xl border border-primary/30 text-primary text-sm font-medium">
                     <Sparkles className="w-4 h-4" />
-                    <span>Premium Developer Resources</span>
+                    <span>{t('hero.badge')}</span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
@@ -345,11 +341,11 @@ export default function HomePage() {
                 className="text-6xl md:text-8xl font-bold tracking-tight mb-8 leading-tight"
               >
                 <span className="block mb-4 bg-gradient-to-r from-fg-primary via-fg-primary to-fg-secondary bg-clip-text text-transparent">
-                  Build Better
+                  {t('hero.title.line1')}
                 </span>
                 <span className="block relative">
                   <span className="relative z-10 bg-gradient-to-r from-primary via-primary-hover to-primary bg-clip-text text-transparent">
-                    Software Faster
+                    {t('hero.title.line2')}
                   </span>
                 </span>
               </motion.h1>
@@ -359,8 +355,7 @@ export default function HomePage() {
                 variants={itemVariants}
                 className="text-xl md:text-2xl text-fg-secondary max-w-3xl mx-auto mb-12 leading-relaxed"
               >
-                Access a curated collection of production-ready code snippets,
-                libraries, and tools crafted by industry experts.
+                {t('hero.description')}
               </motion.p>
 
               {/* Search Bar */}
@@ -371,19 +366,19 @@ export default function HomePage() {
                     <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-fg-secondary" />
                     <Input
                       type="search"
-                      placeholder="Search resources..."
+                      placeholder={t('hero.search.placeholder')}
                       className="flex-1 border-0 focus-visible:ring-0 bg-transparent text-fg-primary placeholder:text-fg-disabled pl-16 pr-4 h-16 text-lg"
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                     />
                     <Button onClick={handleSearch} className="h-12 px-8 bg-gradient-to-r from-primary to-primary-hover hover:from-primary-hover hover:to-primary-active text-primary-fg rounded-xl mr-2 font-medium">
-                      Search
+                      {t('hero.search.button')}
                     </Button>
                   </div>
                 </div>
                 {popularTags.length > 0 && (
                   <div className="flex items-center justify-center gap-4 mt-4 text-sm text-fg-secondary flex-wrap">
-                    <span>Popular:</span>
+                    <span>{t('hero.search.popular')}</span>
                     {popularTags.map((tag) => (
                       <button
                         key={tag}
@@ -405,7 +400,7 @@ export default function HomePage() {
                   className="gap-3 h-14 px-10 bg-gradient-to-r from-primary to-primary-hover hover:from-primary-hover hover:to-primary-active text-primary-fg rounded-2xl text-lg font-semibold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all"
                 >
                   <Rocket className="w-5 h-5" />
-                  Get Started Free
+                  {t('hero.cta.explore')}
                   <ArrowRight className="w-5 h-5" />
                 </Button>
                 <Button
@@ -415,7 +410,7 @@ export default function HomePage() {
                   className="gap-3 h-14 px-10 border-2 border-border hover:bg-bg-tertiary rounded-2xl text-lg font-semibold"
                 >
                   <Play className="w-5 h-4" />
-                  Watch Demo
+                  {t('hero.cta.demo')}
                 </Button>
               </motion.div>
 
@@ -449,7 +444,7 @@ export default function HomePage() {
               className="absolute bottom-10 left-1/2 -translate-x-1/2"
             >
               <div className="flex flex-col items-center gap-2 text-fg-secondary">
-                <span className="text-sm">Scroll to explore</span>
+                <span className="text-sm">{t('hero.scroll')}</span>
                 <ChevronDown className="w-5 h-5" />
               </div>
             </motion.div>
@@ -470,19 +465,19 @@ export default function HomePage() {
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10 text-primary text-sm font-medium mb-6">
                 <Sparkles className="w-4 h-4" />
-                <span>Why Developers Choose Us</span>
+                <span>{t('features.badge')}</span>
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                 <span className="bg-gradient-to-r from-fg-primary via-fg-primary to-fg-secondary bg-clip-text text-transparent">
-                  Built for Developers,
+                  {t('features.title.line1')}
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent">
-                  by Developers
+                  {t('features.title.line2')}
                 </span>
               </h2>
               <p className="text-lg md:text-xl text-fg-secondary max-w-2xl mx-auto">
-                Everything you need to ship production-ready code, faster and with confidence
+                {t('features.description')}
               </p>
             </motion.div>
 
@@ -533,19 +528,19 @@ export default function HomePage() {
               <div className="inline-flex flex-wrap items-center justify-center gap-6 text-sm text-fg-secondary">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-primary" />
-                  <span>Open Source</span>
+                  <span>{t('features.badge1')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-primary" />
-                  <span>TypeScript First</span>
+                  <span>{t('features.badge2')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-primary" />
-                  <span>Community Driven</span>
+                  <span>{t('features.badge3')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-primary" />
-                  <span>Production Ready</span>
+                  <span>{t('features.badge4')}</span>
                 </div>
               </div>
             </motion.div>
@@ -571,15 +566,15 @@ export default function HomePage() {
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-mint/10 border border-accent-mint/20 text-accent-mint text-sm font-medium mb-6">
                 <Zap className="w-4 h-4" />
-                <span>Simple Process</span>
+                <span>{t('howItWorks.badge')}</span>
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6">
                 <span className="bg-gradient-to-r from-fg-primary via-fg-primary to-fg-secondary bg-clip-text text-transparent">
-                  How It Works
+                  {t('howItWorks.title')}
                 </span>
               </h2>
               <p className="text-xl text-fg-secondary max-w-2xl mx-auto">
-                Get started in three simple steps
+                {t('howItWorks.description')}
               </p>
             </motion.div>
 
@@ -604,7 +599,7 @@ export default function HomePage() {
                       <div className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-primary to-primary-hover text-primary-fg mb-6 shadow-lg">
                         <step.icon className="w-8 h-8" />
                       </div>
-                      <div className="text-sm font-semibold text-primary mb-3">Step {index + 1}</div>
+                      <div className="text-sm font-semibold text-primary mb-3">{t('howItWorks.step')} {index + 1}</div>
                       <h3 className="text-2xl font-bold text-fg-primary mb-3">{step.title}</h3>
                       <p className="text-fg-secondary leading-relaxed">{step.description}</p>
                     </div>
@@ -637,15 +632,15 @@ export default function HomePage() {
               <div>
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6">
                   <Star className="w-4 h-4" />
-                  <span>Featured Resources</span>
+                  <span>{t('featured.badge')}</span>
                 </div>
                 <h2 className="text-5xl md:text-6xl font-bold mb-4">
                   <span className="bg-gradient-to-r from-fg-primary via-fg-primary to-fg-secondary bg-clip-text text-transparent">
-                    Premium Snippets
+                    {t('featured.title')}
                   </span>
                 </h2>
                 <p className="text-xl text-fg-secondary max-w-xl">
-                  Hand-picked code templates for your next project
+                  {t('featured.description')}
                 </p>
               </div>
               <Button
@@ -654,7 +649,7 @@ export default function HomePage() {
                 variant="outline"
                 className="gap-3 h-14 px-8 border-2 border-border hover:bg-bg-secondary rounded-2xl"
               >
-                Explore All
+                {t('featured.exploreAll')}
                 <ChevronRight className="w-5 h-5" />
               </Button>
             </motion.div>
@@ -673,14 +668,14 @@ export default function HomePage() {
                 <div className="inline-flex p-4 rounded-full bg-error/10 border border-error/20 mb-6">
                   <AlertCircle className="w-12 h-12 text-error" />
                 </div>
-                <h3 className="text-3xl font-bold text-fg-primary mb-3">Unable to Load Resources</h3>
+                <h3 className="text-3xl font-bold text-fg-primary mb-3">{t('featured.error.title')}</h3>
                 <p className="text-fg-secondary text-lg mb-6">{error}</p>
                 <Button
                   onClick={fetchPosts}
                   className="gap-2 bg-primary hover:bg-primary-hover text-primary-fg"
                 >
                   <RefreshCw className="w-4 h-4" />
-                  Try Again
+                  {t('featured.error.retry')}
                 </Button>
               </div>
             ) : posts.length === 0 ? (
@@ -688,8 +683,8 @@ export default function HomePage() {
                 <div className="inline-flex p-4 rounded-full bg-bg-secondary border border-border mb-6">
                   <Search className="w-12 h-12 text-fg-secondary" />
                 </div>
-                <h3 className="text-3xl font-bold text-fg-primary mb-3">No resources found</h3>
-                <p className="text-fg-secondary text-lg">Try different keywords or browse all categories</p>
+                <h3 className="text-3xl font-bold text-fg-primary mb-3">{t('featured.empty.title')}</h3>
+                <p className="text-fg-secondary text-lg">{t('featured.empty.description')}</p>
               </div>
             ) : (
               <motion.div
@@ -732,11 +727,11 @@ export default function HomePage() {
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6">
                 <span className="bg-gradient-to-r from-fg-primary via-fg-primary to-fg-secondary bg-clip-text text-transparent">
-                  Frequently Asked Questions
+                  {t('faq.title')}
                 </span>
               </h2>
               <p className="text-xl text-fg-secondary max-w-2xl mx-auto">
-                Everything you need to know about Chunkoverflow
+                {t('faq.description')}
               </p>
             </motion.div>
 
@@ -795,7 +790,7 @@ export default function HomePage() {
               className="text-center mb-12"
             >
               <p className="text-fg-secondary text-sm uppercase tracking-wider font-semibold">
-                Trusted by developers using modern technologies
+                {t('techStack.title')}
               </p>
             </motion.div>
 

@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Package, Menu, X, LogIn, LayoutDashboard, LogOut, Sparkles, ArrowRight, Moon, Sun } from 'lucide-react';
+import { Package, Menu, X, LogIn, LayoutDashboard, LogOut, Sparkles, ArrowRight, Moon, Sun, Languages } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 
@@ -17,6 +18,7 @@ export default function Header() {
   });
   const { isAuthenticated, logout } = useAuthStore();
   const navigate = useNavigate();
+  const { language, setLanguage } = useLanguage();
 
   const { scrollY } = useScroll();
   const headerY = useTransform(scrollY, [0, 100], [0, -10]);
@@ -187,8 +189,30 @@ export default function Header() {
                 </Link>
               </motion.div>
 
-              {/* Dark Mode Toggle */}
+              {/* Language Toggle */}
               <motion.div variants={itemVariants} custom={2}>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setLanguage(language === 'vi' ? 'en' : 'vi')}
+                    className="gap-2 relative overflow-hidden group"
+                    aria-label="Switch language"
+                  >
+                    <motion.div
+                      className="absolute inset-0 bg-primary/10"
+                      initial={{ scale: 0, opacity: 0 }}
+                      whileHover={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                    />
+                    <Languages className="h-4 w-4 relative z-10" />
+                    <span className="text-xs font-semibold relative z-10">{language.toUpperCase()}</span>
+                  </Button>
+                </motion.div>
+              </motion.div>
+
+              {/* Dark Mode Toggle */}
+              <motion.div variants={itemVariants} custom={3}>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button
                     variant="ghost"
@@ -237,7 +261,7 @@ export default function Header() {
               {isAuthenticated ? (
                 <motion.div
                   variants={itemVariants}
-                  custom={3}
+                  custom={4}
                   className="flex items-center gap-4"
                 >
                   <Link to="/admin/posts">
@@ -256,7 +280,7 @@ export default function Header() {
                   </motion.div>
                 </motion.div>
               ) : (
-                <motion.div variants={itemVariants} custom={3}>
+                <motion.div variants={itemVariants} custom={4}>
                   <Link to="/admin/login">
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       <Button
@@ -377,8 +401,28 @@ export default function Header() {
                     </Link>
                   </motion.div>
 
-                  {/* Dark Mode Toggle Mobile */}
+                  {/* Language Toggle Mobile */}
                   <motion.div variants={itemVariants} custom={2}>
+                    <button
+                      onClick={() => setLanguage(language === 'vi' ? 'en' : 'vi')}
+                      className="flex items-center justify-between py-3 text-lg font-medium group w-full text-left"
+                      aria-label="Switch language"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Languages className="h-5 w-5 text-primary" />
+                        <span>{language === 'vi' ? 'English' : 'Tiếng Việt'}</span>
+                      </span>
+                      <motion.div
+                        whileHover={{ x: 4 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                      >
+                        <ArrowRight className="h-5 w-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </motion.div>
+                    </button>
+                  </motion.div>
+
+                  {/* Dark Mode Toggle Mobile */}
+                  <motion.div variants={itemVariants} custom={3}>
                     <button
                       onClick={() => {
                         toggleDarkMode();
@@ -427,7 +471,7 @@ export default function Header() {
                     {isAuthenticated ? (
                       <motion.div
                         variants={itemVariants}
-                        custom={3}
+                        custom={4}
                         className="grid gap-4"
                       >
                         <Link
@@ -466,7 +510,7 @@ export default function Header() {
                         </button>
                       </motion.div>
                     ) : (
-                      <motion.div variants={itemVariants} custom={3}>
+                      <motion.div variants={itemVariants} custom={4}>
                         <Link
                           to="/admin/login"
                           onClick={() => setIsMenuOpen(false)}

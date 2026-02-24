@@ -209,7 +209,6 @@ export default function LoginPage() {
                   backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
                 }}
                 transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
-                style={{ opacity: 0.05 }}
               />
 
               {/* Shimmer Effect */}
