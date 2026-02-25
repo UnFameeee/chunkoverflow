@@ -6,49 +6,57 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Package, Loader2, AlertCircle, Lock, ShieldCheck } from 'lucide-react';
-import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
+import { Package, Loader2, Lock, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
+  const { toast } = useToast();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [focusedField, setFocusedField] = useState<'username' | 'password' | null>(null);
-
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const rotateX = useTransform(mouseY, [-100, 100], [2, -2]);
-  const rotateY = useTransform(mouseX, [-100, 100], [-2, 2]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    mouseX.set(e.clientX - rect.left);
-    mouseY.set(e.clientY - rect.top);
-  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError('');
+    console.log('Form submitted');
     setLoading(true);
 
     try {
       const response = await authService.login(username, password);
+      console.log('Login response:', response);
       if (response.result) {
         login(
           response.result.accessToken,
           response.result.refreshToken,
           response.result.user
         );
-        navigate('/admin/posts');
+        toast({
+          title: 'Login successful',
+          description: 'Welcome back!',
+        });
+        setTimeout(() => {
+          navigate('/admin/posts');
+        }, 100);
       } else {
-        setError('Invalid response from server');
+        console.log('Invalid response from server');
+        toast({
+          variant: 'destructive',
+          title: 'Login failed',
+          description: 'Invalid response from server',
+        });
       }
     } catch (err: unknown) {
-      setError((err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Login failed. Please check your credentials.');
+      console.log('Login error:', err);
+      const errorMessage = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Login failed. Please check your credentials.';
+      console.log('Showing toast with error:', errorMessage);
+      toast({
+        variant: 'destructive',
+        title: 'Login failed',
+        description: errorMessage,
+      });
     } finally {
       setLoading(false);
     }
@@ -179,25 +187,12 @@ export default function LoginPage() {
 
       {/* Animated Login Card */}
       <motion.div
-        style={{
-          rotateX,
-          rotateY,
-          transformStyle: 'preserve-3d',
-        }}
-        onMouseMove={handleMouseMove}
-        className="perspective-1000"
+        variants={cardVariants}
+        initial="hidden"
+        animate="visible"
+        className="w-full max-w-2xl px-4"
       >
-        <motion.div
-          variants={cardVariants}
-          initial="hidden"
-          animate="visible"
-          className="w-full max-w-md"
-        >
-          <motion.div
-            whileHover={{ scale: 1.01 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-          >
-            <Card className="shadow-2xl border-border/60 bg-card/80 backdrop-blur-xl overflow-hidden">
+        <Card className="shadow-2xl border-border/60 bg-card/80 backdrop-blur-xl overflow-hidden">
               {/* Animated Border Gradient */}
               <motion.div
                 className="absolute inset-0 rounded-lg pointer-events-none"
@@ -270,11 +265,8 @@ export default function LoginPage() {
                 </motion.div>
               </CardHeader>
 
-              <CardContent className="relative z-10">
-                <motion.form
-                  variants={staggerContainer}
-                  initial="hidden"
-                  animate="visible"
+              <CardContent className="relative z-10 px-12 pb-10">
+                <form
                   onSubmit={handleSubmit}
                   className="space-y-5"
                 >
@@ -353,26 +345,6 @@ export default function LoginPage() {
                     </motion.div>
                   </motion.div>
 
-                  <AnimatePresence mode="wait">
-                    {error && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10, height: 0 }}
-                        animate={{ opacity: 1, y: 0, height: 'auto' }}
-                        exit={{ opacity: 0, y: -10, height: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm flex items-center gap-2 border border-destructive/20"
-                      >
-                        <motion.div
-                          animate={{ rotate: [0, -10, 10, -10, 0] }}
-                          transition={{ duration: 0.5, repeat: Infinity }}
-                        >
-                          <AlertCircle className="w-4 h-4 shrink-0" />
-                        </motion.div>
-                        {error}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
                   <motion.div variants={itemVariants}>
                     <motion.div
                       className="relative overflow-hidden rounded-lg"
@@ -409,11 +381,9 @@ export default function LoginPage() {
                       </Button>
                     </motion.div>
                   </motion.div>
-                </motion.form>
+                </form>
               </CardContent>
             </Card>
-          </motion.div>
-        </motion.div>
       </motion.div>
     </div>
   );

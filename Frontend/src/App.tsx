@@ -6,6 +6,7 @@ import AdminPostsPage from './pages/admin/AdminPostsPage';
 import PostFormPage from './pages/admin/PostFormPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { Toaster } from './components/ui/toaster';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             }
           />
         </Routes>
+        <Toaster />
       </BrowserRouter>
     </LanguageProvider>
   );
