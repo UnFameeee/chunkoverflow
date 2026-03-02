@@ -16,6 +16,7 @@ async function bootstrap() {
     'http://localhost:5002',
     'http://localhost:5003',
     'http://localhost:5173',
+    'http://127.0.0.1:54173',
   ];
   if (process.env.FRONTEND_URL) {
     allowedOrigins.push(process.env.FRONTEND_URL);

@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEnum, IsUrl } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsUrl, ValidateIf } from 'class-validator';
 import { Status } from '@prisma/client';
 
 export class CreatePostDto {
@@ -13,6 +13,7 @@ export class CreatePostDto {
   fullDescription?: string;
 
   @IsOptional()
+  @ValidateIf((o) => o.url !== '' && o.url !== null)
   @IsUrl()
   url?: string;
 

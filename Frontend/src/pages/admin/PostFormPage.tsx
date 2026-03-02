@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Loader2, Globe, Image as ImageIcon, Layout, FileText, AlertCircle, Sparkles, Link as LinkIcon, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, Globe, Image as ImageIcon, Layout, FileText, Sparkles, Link as LinkIcon, CheckCircle2 } from 'lucide-react';
 import Header from '@/components/Header';
 import RichTextEditor from '@/components/RichTextEditor';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
+import { showToast } from '@/lib/toast';
 
 export default function PostFormPage() {
   const navigate = useNavigate();
@@ -18,7 +19,6 @@ export default function PostFormPage() {
 
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEdit);
-  const [error, setError] = useState('');
   const [iconFile, setIconFile] = useState<File | undefined>();
 
   const [formData, setFormData] = useState({
@@ -55,7 +55,7 @@ export default function PostFormPage() {
       }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch post';
-      setError(errorMessage);
+      showToast.error(errorMessage);
     } finally {
       setFetching(false);
     }
@@ -82,19 +82,20 @@ export default function PostFormPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
 
     try {
       if (isEdit && id) {
         await postService.updatePost(Number(id), formData, iconFile);
+        showToast.success('Post updated successfully!');
       } else {
         await postService.createPost(formData, iconFile);
+        showToast.success('Post created successfully!');
       }
       navigate('/admin/posts');
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to save post';
-      setError(errorMessage);
+      showToast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -338,31 +339,6 @@ export default function PostFormPage() {
               </motion.div>
             </div>
           </motion.div>
-
-          <AnimatePresence mode="wait">
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -20, height: 0 }}
-                animate={{ opacity: 1, y: 0, height: 'auto' }}
-                exit={{ opacity: 0, y: -20, height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="mb-8 p-4 rounded-2xl bg-destructive/10 text-destructive flex items-center gap-3 border border-destructive/20 shadow-sm"
-              >
-                <motion.div
-                  className="p-2 bg-destructive/10 rounded-full"
-                  animate={{
-                    rotate: [0, -10, 10, -10, 0],
-                  }}
-                  transition={{
-                    duration: 0.5,
-                  }}
-                >
-                  <AlertCircle className="w-5 h-5 shrink-0" />
-                </motion.div>
-                <p className="font-medium">{error}</p>
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content Column */}

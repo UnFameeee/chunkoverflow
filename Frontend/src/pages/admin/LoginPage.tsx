@@ -8,12 +8,11 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Package, Loader2, Lock, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useToast } from '@/components/ui/use-toast';
+import { showToast } from '@/lib/toast';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
-  const { toast } = useToast();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,30 +32,19 @@ export default function LoginPage() {
           response.result.refreshToken,
           response.result.user
         );
-        toast({
-          title: 'Login successful',
-          description: 'Welcome back!',
-        });
+        showToast.success('Welcome back!');
         setTimeout(() => {
           navigate('/admin/posts');
         }, 100);
       } else {
         console.log('Invalid response from server');
-        toast({
-          variant: 'destructive',
-          title: 'Login failed',
-          description: 'Invalid response from server',
-        });
+        showToast.error('Invalid response from server');
       }
     } catch (err: unknown) {
       console.log('Login error:', err);
       const errorMessage = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Login failed. Please check your credentials.';
       console.log('Showing toast with error:', errorMessage);
-      toast({
-        variant: 'destructive',
-        title: 'Login failed',
-        description: errorMessage,
-      });
+      showToast.error(errorMessage);
     } finally {
       setLoading(false);
     }
